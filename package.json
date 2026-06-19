@@ -1,0 +1,24 @@
+{
+  "name": "roznama",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Roznama (روزنامة) — Egyptian life-tracker. Full-stack: Vite + React + TS, Express, Supabase/Postgres.",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @roznama/web",
+    "dev:web": "npm run dev --workspace @roznama/web",
+    "dev:api": "npm run dev --workspace @roznama/api",
+    "build": "npm run build --workspace @roznama/web && npm run build --workspace @roznama/api",
+    "build:web": "npm run build --workspace @roznama/web",
+    "build:api": "npm run build --workspace @roznama/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "start": "npm run start --workspace @roznama/api"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

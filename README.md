@@ -1,25 +1,129 @@
-# CODING AGENTS: READ THIS FIRST
+# روزنامة · Roznama — Egyptian Life Tracker
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+A mobile-first, **RTL Egyptian-Arabic** personal life tracker styled as a retro tear-off
+calendar (نتيجة) with a modern, flat, polished UI. Tracks **daily tasks, habits, monthly
+goals, and personal finance (EGP)**, with a live split-flap clock, analytics dashboard,
+monthly reports, PDF/Excel export, dark/light mode, and cloud sync.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+Built from the Claude Design handoff in [`project/Roznama.dc.html`](project/Roznama.dc.html)
+(see [`project/README.handoff.md`](project/README.handoff.md) and [`chats/`](chats/) for the
+original design intent).
 
-## What you should do — IMPORTANT
+---
 
-**Read the chat transcripts first.** There are 1 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+## ✨ Features
 
-**Read `project/Roznama.dc.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+- **Dashboard** — vintage tear-off calendar card, live **split-flap clock** (Arabic-Indic
+  digits, ticks every second), Gregorian + Hijri dates, animated progress ring, count-up balance.
+- **Daily tasks** — checkable list, add/delete, progress bar, and a **confetti celebration**
+  when everything's done. Auto-resets each new day.
+- **Habits** — emoji + color habits with **streak tracking** (🔥) and a one-tap daily toggle.
+- **Monthly goals** — progress goals with ±10% controls and target dates.
+- **Finance** — income/expense tracking in EGP, balance, top-spending categories.
+- **Analytics** — month switcher, income/expense trend (6-month bar chart), daily-spend area
+  chart, category pie chart — all via Recharts.
+- **Reports & export** — server-generated monthly **PDF** and **Excel** reports (CSV fallback offline).
+- **Auth & sync** — Supabase email/password accounts; per-user data with Postgres **Row Level
+  Security**. Works fully **offline (localStorage)** with no account.
+- **Profile & settings** — display name, **dark / light / system** theme, notifications.
+- **Notifications** — browser reminders for unfinished tasks (with permission).
+- **Backup & restore** — export/import your full dataset as JSON.
+- **Role-based access** — `user` / `admin` roles with an admin overview endpoint.
+- **Motion** — coordinated load sequence, tab transitions, count-ups, animated rings/bars,
+  split-flap flips, confetti — all via **Framer Motion**, fully `prefers-reduced-motion` aware.
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+## 🧱 Architecture
 
-## About the design files
+```
+roznama/
+├─ apps/
+│  ├─ web/          # Vite + React + TypeScript frontend (the UI)
+│  └─ api/          # Express + TypeScript REST API (Supabase-backed)
+├─ packages/
+│  └─ shared/       # Shared TypeScript domain types (web + api)
+├─ api/             # Vercel serverless entry (wraps the Express app)
+├─ supabase/
+│  └─ migrations/   # Postgres schema + Row Level Security policies
+├─ project/         # Original Claude Design handoff bundle
+└─ vercel.json      # Deployment config
+```
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+- **Frontend** — React 18, Vite, Framer Motion, Recharts, `@supabase/supabase-js`.
+- **Backend** — Express, `@supabase/supabase-js` (per-request RLS-bound client), `pdfkit`, `exceljs`.
+- **Database** — Postgres on Supabase. Every table is RLS-scoped to `auth.uid()`.
+- **Offline-first** — when Supabase env vars are absent the app runs entirely on `localStorage`,
+  so it's demoable with zero backend; setting the env vars enables accounts + cloud sync.
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+## 🚀 Quick start (local)
 
-## Bundle contents
+```bash
+npm install
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `Roznama: Egyptian Life Tracker` project files (HTML prototypes, assets, components)
+# 1) Run with NO backend (offline mode — instant, uses localStorage):
+npm run dev          # → http://localhost:5173
+
+# 2) Run full-stack (cloud sync) — set env vars first (see below), then:
+npm run dev:api      # Express on :8787
+npm run dev:web      # Vite on :5173 (proxies /api → :8787)
+```
+
+Copy [`.env.example`](.env.example) to `.env` and fill in your Supabase keys to enable
+authentication and cloud sync.
+
+## 🗄️ Database setup (Supabase)
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. In **SQL Editor**, run the migrations in order:
+   - `supabase/migrations/0001_init.sql`
+   - `supabase/migrations/0002_habits_profiles.sql`
+3. Grab **Project Settings → API**: the `URL` and `anon` key → put them in your env vars.
+4. (Optional) To make yourself an admin:
+   `update public.profiles set role = 'admin' where user_id = '<your-uid>';`
+
+Row Level Security is enabled on every table, so the `anon` key is safe to expose to the client.
+
+## 🔌 API surface
+
+All routes are under `/api` and require a Supabase `Authorization: Bearer <token>` (except health).
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/health` | Liveness + config status |
+| GET | `/api/state` | Full dataset (daily, monthly, tx, habits, profile) + day rollover |
+| PUT | `/api/state/preferences` | Toggle notifications |
+| POST/PATCH/DELETE | `/api/daily[/:id]` | Daily task CRUD |
+| POST/PATCH/DELETE | `/api/monthly[/:id]` | Monthly goal CRUD |
+| POST/DELETE | `/api/transactions[/:id]` | Finance CRUD |
+| POST/PATCH/DELETE | `/api/habits[/:id]` | Habit CRUD |
+| POST | `/api/habits/:id/toggle` | Toggle today's habit log |
+| GET/PUT | `/api/profile` | Profile + theme + display name |
+| GET | `/api/reports/monthly?month=YYYY-MM` | Monthly report JSON |
+| GET | `/api/reports/analytics?month=&months=` | Chart series |
+| GET | `/api/reports/export?month=&format=pdf\|xlsx` | Download report |
+| GET / POST | `/api/backup[/restore]` | Export / import dataset |
+| GET | `/api/admin/overview` | Admin-only aggregates |
+
+## ☁️ Deployment (Vercel)
+
+See [`DEPLOYMENT.md`](DEPLOYMENT.md) for the full walkthrough. In short:
+
+1. Push to GitHub and import the repo into Vercel.
+2. Set env vars (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`).
+3. Deploy — `vercel.json` builds the web app to `apps/web/dist` and serves the Express API as a
+   serverless function under `/api/*`.
+
+## 🧪 Scripts
+
+```bash
+npm run dev          # web (offline) dev server
+npm run dev:api      # Express API (tsx watch)
+npm run build        # build web + typecheck api
+npm run typecheck    # typecheck all workspaces
+```
+
+## 🎨 Design fidelity
+
+The light theme's colors, spacing, radii, and typography (Cairo + Aref Ruqaa) are ported
+verbatim from the exported prototype, so light mode is pixel-faithful to the original design.
+Dark mode is layered on top via CSS custom properties. The Framer Motion choreography
+re-implements the prototype's CSS/WAAPI motion (the original brief asked for Framer Motion).
