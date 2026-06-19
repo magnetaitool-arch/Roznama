@@ -1,0 +1,72 @@
+/* ===========================================================================
+   MAGNET · COLOR TOKENS
+   60% black/dark · 30% white/paper · 10% lime. One accent only.
+   ===========================================================================*/
+
+:root {
+  /* --- Core palette ------------------------------------------------------ */
+  --magnet-black: #0A0A0A;   /* primary background */
+  --lime:         #C4FF3D;   /* the one accent — CTAs, highlights, shapes */
+  --paper:        #F7F7F4;   /* light canvas */
+  --white:        #FFFFFF;   /* pure white */
+
+  /* --- Neutral scale (depth, borders, secondary text) ------------------- */
+  --ink-900: #0A0A0A;   /* primary dark */
+  --ink-700: #1C1C1C;   /* cards / sections on black */
+  --ink-500: #3A3A3A;   /* dividers on dark */
+  --grey-400: #8A8A8A;  /* secondary / muted text */
+  --grey-200: #D9D9D9;  /* borders on light */
+
+  /* --- Lime support (press / hover only — never a second accent) -------- */
+  --lime-press: #B0E833;  /* pressed lime fill */
+  --lime-dim:   #9BC42E;  /* lime on light for non-text marks (lines/dots) */
+
+  /* =========================================================================
+     SEMANTIC ALIASES — prefer these in components.
+     Defaults target the brand's primary context: the BLACK canvas.
+     ========================================================================*/
+
+  /* Surfaces */
+  --surface-base:    var(--magnet-black);  /* page background */
+  --surface-card:    var(--ink-700);       /* card on black */
+  --surface-raised:  #242424;              /* hover/raised card on black */
+  --surface-inverse: var(--paper);         /* light section */
+
+  /* Text */
+  --text-strong:  var(--white);     /* headlines / primary text on dark */
+  --text-body:    #E8E8E6;          /* body text on dark */
+  --text-muted:   var(--grey-400);  /* captions, secondary */
+  --text-accent:  var(--lime);      /* the lime highlight word */
+  --text-on-lime: var(--magnet-black);
+  --text-on-paper: var(--magnet-black);
+
+  /* Borders & lines */
+  --border-dark:  var(--ink-500);   /* 1px dividers on dark */
+  --border-light: var(--grey-200);  /* 1px dividers on light */
+  --border-accent: var(--lime);
+
+  /* Accent */
+  --accent:        var(--lime);
+  --accent-press:  var(--lime-press);
+  --on-accent:     var(--magnet-black);
+
+  /* Focus ring */
+  --focus-ring: var(--lime);
+}
+
+/* Light-context scope — flip semantics when on paper/white.
+   Wrap any light section in [data-theme="light"]. */
+[data-theme="light"] {
+  --surface-base:   var(--paper);
+  --surface-card:   var(--white);
+  --surface-raised: var(--white);
+  --surface-inverse: var(--magnet-black);
+
+  --text-strong: var(--magnet-black);
+  --text-body:   #1C1C1C;
+  --text-muted:  var(--grey-400);
+  --text-accent: var(--lime-dim);   /* lime never used as TEXT on light */
+
+  --border-dark:  var(--grey-200);
+  --border-light: var(--grey-200);
+}

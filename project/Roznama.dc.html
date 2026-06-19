@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{background:#E4D6B6;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  input{font-family:inherit;}
+  ::selection{background:#C23B2E;color:#FBF5E6;}
+  input::placeholder{color:#A89B7E;}
+  *::-webkit-scrollbar{width:0;height:0;}
+  @keyframes riseIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+  @keyframes panelIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  @keyframes flapIn{0%{transform:rotateX(-88deg);opacity:0;}55%{transform:rotateX(8deg);}100%{transform:rotateX(0);opacity:1;}}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.15;}}
+  @keyframes confetti{to{transform:translateY(115vh) rotate(720deg);}}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes celebPop{0%{transform:translate(-50%,-50%) scale(.4);opacity:0;}60%{transform:translate(-50%,-50%) scale(1.08);opacity:1;}100%{transform:translate(-50%,-50%) scale(1);opacity:1;}}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}}
+</style>
+</helmet>
+
+<div dir="rtl" style="min-height:100vh;background:radial-gradient(130% 60% at 50% 0%, #F6EED6 0%, #ECDFC0 60%, #E4D6B6 100%);font-family:'Cairo',sans-serif;color:#2A241C;max-width:460px;margin:0 auto;position:relative;">
+
+  <header style="position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;background:linear-gradient(#F6EED6 60%,rgba(246,238,214,0));">
+    <div>
+      <div style="font-size:12px;font-weight:700;color:#B0532E;letter-spacing:.04em;margin-bottom:1px;">{{ greeting }}</div>
+      <div style="display:flex;align-items:flex-end;gap:3px;">
+        <span style="font-family:'Aref Ruqaa',serif;font-size:28px;font-weight:700;color:#241E16;line-height:.9;">روزنامة</span>
+        <span style="width:8px;height:8px;border-radius:50%;background:#C23B2E;display:inline-block;margin-bottom:4px;"></span>
+      </div>
+    </div>
+    <button onClick="{{ onToggleBell }}" style="position:relative;width:44px;height:44px;border-radius:14px;background:#FBF5E6;border:1px solid #E2D4B4;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(60,40,15,.06);" style-active="transform:scale(.92)">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="{{ bellColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.7 21a2 2 0 0 1-3.4 0"></path></svg>
+      <sc-if value="{{ bellOn }}"><span style="position:absolute;top:9px;left:11px;width:8px;height:8px;border-radius:50%;background:#3E7C5A;border:2px solid #FBF5E6;"></span></sc-if>
+    </button>
+  </header>
+
+  <main style="padding:0 0 116px;">
+
+    <!-- ============ DASHBOARD ============ -->
+    <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:panelIn .4s cubic-bezier(.2,.7,.2,1) both;">
+
+      <!-- Tear-off calendar hero -->
+      <div style="position:relative;margin:6px 18px 0;background:#FBF5E6;border-radius:22px;border:1px solid #E6DABE;box-shadow:0 18px 36px rgba(60,40,15,.12);overflow:hidden;animation:riseIn .6s cubic-bezier(.2,.7,.2,1) .02s both;">
+        <div style="display:flex;justify-content:space-around;align-items:center;height:18px;background:#FBF5E6;padding:0 18px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:#E3D6B6;box-shadow:inset 0 1px 1px rgba(0,0,0,.18);"></span><span style="width:7px;height:7px;border-radius:50%;background:#E3D6B6;box-shadow:inset 0 1px 1px rgba(0,0,0,.18);"></span><span style="width:7px;height:7px;border-radius:50%;background:#E3D6B6;box-shadow:inset 0 1px 1px rgba(0,0,0,.18);"></span><span style="width:7px;height:7px;border-radius:50%;background:#E3D6B6;box-shadow:inset 0 1px 1px rgba(0,0,0,.18);"></span><span style="width:7px;height:7px;border-radius:50%;background:#E3D6B6;box-shadow:inset 0 1px 1px rgba(0,0,0,.18);"></span><span style="width:7px;height:7px;border-radius:50%;background:#E3D6B6;box-shadow:inset 0 1px 1px rgba(0,0,0,.18);"></span><span style="width:7px;height:7px;border-radius:50%;background:#E3D6B6;box-shadow:inset 0 1px 1px rgba(0,0,0,.18);"></span>
+        </div>
+        <div style="background:#C23B2E;text-align:center;padding:11px 0 13px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.22em;color:#F4C9BC;">اليوم</div>
+          <div style="font-family:'Aref Ruqaa',serif;font-size:30px;font-weight:700;color:#FCF3E6;line-height:1.1;margin-top:2px;">{{ dayName }}</div>
+        </div>
+        <div style="padding:22px 14px 10px;">{{ clockEl }}</div>
+        <div style="padding:4px 18px 22px;text-align:center;">
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
+            <span style="flex:1;height:1px;background:#E2D4B4;"></span>
+            <span style="font-size:19px;font-weight:800;color:#2A241C;white-space:nowrap;">{{ gregDate }}</span>
+            <span style="flex:1;height:1px;background:#E2D4B4;"></span>
+          </div>
+          <div style="margin-top:9px;display:inline-flex;align-items:center;gap:8px;background:#F6E7DE;border:1px solid #EBC9BD;border-radius:999px;padding:4px 12px;">
+            <span style="font-size:10px;font-weight:700;letter-spacing:.1em;color:#9E2A20;">هجري</span>
+            <span style="font-size:13px;font-weight:700;color:#C23B2E;">{{ hijriDate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 18px 0;animation:riseIn .6s cubic-bezier(.2,.7,.2,1) .12s both;">
+        <div style="background:#FBF5E6;border:1px solid #E6DABE;border-radius:18px;padding:16px 14px;text-align:center;box-shadow:0 8px 18px rgba(60,40,15,.06);">
+          <div style="position:relative;width:96px;height:96px;margin:0 auto;">
+            <svg width="96" height="96" viewBox="0 0 120 120" style="transform:rotate(-90deg);">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#EEE2C4" stroke-width="11"></circle>
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#3E7C5A" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.726" style="stroke-dashoffset:{{ dailyRingOffset }};"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <span style="font-size:22px;font-weight:900;color:#2A241C;line-height:1;">{{ dailyPctLabel }}</span>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:13px;font-weight:700;color:#5C5345;">مهام النهارده</div>
+          <div style="font-size:12px;font-weight:600;color:#9A8E78;margin-top:1px;">{{ dailyDoneCount }} من {{ dailyTotal }} خلصت</div>
+        </div>
+        <div style="background:#221D17;border-radius:18px;padding:16px 15px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 18px rgba(34,29,23,.22);">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#8C8270;">الرصيد الحالي</div>
+            <div style="font-size:26px;font-weight:900;color:#FBF5E6;line-height:1.15;margin-top:8px;">{{ balanceLabel }}</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;">
+            <div style="flex:1;background:#2D2820;border-radius:10px;padding:7px 8px;">
+              <div style="font-size:10px;color:#7FAE96;font-weight:700;">دخل</div>
+              <div style="font-size:12px;color:#9FD3BB;font-weight:800;margin-top:1px;">{{ incomeShort }}</div>
+            </div>
+            <div style="flex:1;background:#2D2820;border-radius:10px;padding:7px 8px;">
+              <div style="font-size:10px;color:#D38A80;font-weight:700;">صرف</div>
+              <div style="font-size:12px;color:#E6A79D;font-weight:800;margin-top:1px;">{{ expenseShort }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly mini -->
+      <button onClick="{{ tabMonthly }}" style="display:block;width:calc(100% - 36px);text-align:right;margin:14px 18px 0;background:#FBF5E6;border:1px solid #E6DABE;border-radius:18px;padding:16px;box-shadow:0 8px 18px rgba(60,40,15,.06);animation:riseIn .6s cubic-bezier(.2,.7,.2,1) .2s both;" style-active="transform:scale(.99)">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:14px;font-weight:800;color:#2A241C;">أهدافك الشهر ده</span>
+          <span style="font-size:13px;font-weight:900;color:#3E7C5A;">{{ monthlyAvgLabel }}</span>
+        </div>
+        <div style="margin-top:11px;height:10px;background:#EEE2C4;border-radius:999px;overflow:hidden;">
+          <div style="height:100%;width:{{ monthlyAvgWidth }}%;background:linear-gradient(90deg,#3E7C5A,#5A9B77);border-radius:999px;transition:width .9s cubic-bezier(.2,.7,.2,1);"></div>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:#9A8E78;font-weight:600;">{{ monthlyCountLabel }} هدف نشط · اضغط للتفاصيل ←</div>
+      </button>
+
+      <!-- Today's tasks preview -->
+      <div style="margin:18px 18px 0;animation:riseIn .6s cubic-bezier(.2,.7,.2,1) .28s both;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;padding:0 2px;">
+          <span style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C23B2E;">مهام النهارده</span>
+          <button onClick="{{ tabDaily }}" style="font-size:12px;font-weight:700;color:#5C5345;" style-active="transform:scale(.95)">شوف الكل ←</button>
+        </div>
+        <sc-for list="{{ dashTopDaily }}" as="t" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:12px;margin-top:9px;background:#FBF5E6;border:1px solid #EADFBF;border-radius:14px;padding:12px 14px;box-shadow:0 4px 12px rgba(60,40,15,.04);">
+            <button onClick="{{ t.onToggle }}" style="flex:none;width:26px;height:26px;border-radius:8px;border:2px solid;{{ t.boxStyle }}display:flex;align-items:center;justify-content:center;" style-active="transform:scale(.86)">
+              <sc-if value="{{ t.done }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBF5E6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"></path></svg></sc-if>
+            </button>
+            <span style="flex:1;font-size:15px;font-weight:600;{{ t.textStyle }}">{{ t.text }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+    </div>
+    </sc-if>
+
+    <!-- ============ DAILY ============ -->
+    <sc-if value="{{ isDaily }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:panelIn .4s cubic-bezier(.2,.7,.2,1) both;">
+      <div style="margin:8px 18px 0;background:#221D17;border-radius:20px;padding:18px;box-shadow:0 12px 26px rgba(34,29,23,.2);">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#8C8270;">إنجاز النهارده</div>
+            <div style="font-size:15px;font-weight:800;color:#FBF5E6;margin-top:3px;">خلّصت {{ dailyDoneCount }} من {{ dailyTotal }}</div>
+          </div>
+          <div style="font-size:30px;font-weight:900;color:#EFC75E;">{{ dailyPctLabel }}</div>
+        </div>
+        <div style="margin-top:14px;height:12px;background:#39322A;border-radius:999px;overflow:hidden;">
+          <div style="height:100%;width:{{ dailyRealPct }}%;background:linear-gradient(90deg,#3E7C5A,#6CB390);border-radius:999px;transition:width .7s cubic-bezier(.2,.7,.2,1);"></div>
+        </div>
+      </div>
+
+      <sc-if value="{{ allDoneHint }}">
+        <div style="margin:12px 18px 0;background:#E8F2EA;border:1px solid #BEDCC8;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+          <span style="flex:none;width:34px;height:34px;border-radius:50%;background:#3E7C5A;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"></path></svg></span>
+          <span style="font-size:14px;font-weight:800;color:#2E6E5A;">يوم جامد! خلّصت كل مهامك.</span>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;gap:8px;margin:14px 18px 0;">
+        <input value="{{ newDaily }}" onChange="{{ onNewDaily }}" onKeyDown="{{ onDailyKey }}" placeholder="ضيف مهمة جديدة..." style="flex:1;background:#FBF5E6;border:1px solid #E0D3B2;border-radius:13px;padding:13px 15px;font-size:15px;font-weight:600;color:#2A241C;text-align:right;outline:none;" style-focus="border-color:#C23B2E;box-shadow:0 0 0 3px rgba(194,59,46,.14)" />
+        <button onClick="{{ onAddDaily }}" style="width:50px;border-radius:13px;background:#C23B2E;color:#FBF5E6;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(194,59,46,.3);" style-active="transform:scale(.92)">+</button>
+      </div>
+
+      <div style="margin-top:4px;">
+        <sc-for list="{{ dailyView }}" as="t" hint-placeholder-count="5">
+          <div style="display:flex;align-items:center;gap:12px;margin:10px 18px 0;background:#FBF5E6;border:1px solid #EADFBF;border-radius:14px;padding:14px;box-shadow:0 4px 12px rgba(60,40,15,.04);">
+            <button onClick="{{ t.onToggle }}" style="flex:none;width:28px;height:28px;border-radius:8px;border:2px solid;{{ t.boxStyle }}display:flex;align-items:center;justify-content:center;" style-active="transform:scale(.86)">
+              <sc-if value="{{ t.done }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FBF5E6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 7"></path></svg></sc-if>
+            </button>
+            <span style="flex:1;font-size:15px;font-weight:600;{{ t.textStyle }}">{{ t.text }}</span>
+            <button onClick="{{ t.onDelete }}" style="flex:none;color:#C2B49A;font-size:22px;line-height:1;width:26px;height:26px;" style-active="transform:scale(.82)">×</button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ============ MONTHLY ============ -->
+    <sc-if value="{{ isMonthly }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:panelIn .4s cubic-bezier(.2,.7,.2,1) both;">
+      <div style="margin:8px 18px 0;display:flex;align-items:center;justify-content:space-between;background:#FBF5E6;border:1px solid #E6DABE;border-radius:18px;padding:16px 18px;box-shadow:0 8px 18px rgba(60,40,15,.06);">
+        <div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C23B2E;">أهداف {{ monthLabel }}</div>
+          <div style="font-size:14px;font-weight:700;color:#5C5345;margin-top:3px;">متوسط الإنجاز</div>
+        </div>
+        <div style="font-size:32px;font-weight:900;color:#3E7C5A;">{{ monthlyAvgLabel }}</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin:14px 18px 0;">
+        <input value="{{ newMonthly }}" onChange="{{ onNewMonthly }}" placeholder="هدف الشهر..." style="flex:2;background:#FBF5E6;border:1px solid #E0D3B2;border-radius:13px;padding:13px 15px;font-size:15px;font-weight:600;color:#2A241C;text-align:right;outline:none;" style-focus="border-color:#C23B2E;box-shadow:0 0 0 3px rgba(194,59,46,.14)" />
+        <input value="{{ newMonthlyTarget }}" onChange="{{ onNewMonthlyTarget }}" placeholder="الموعد" style="flex:1;min-width:0;background:#FBF5E6;border:1px solid #E0D3B2;border-radius:13px;padding:13px 12px;font-size:14px;font-weight:600;color:#2A241C;text-align:right;outline:none;" style-focus="border-color:#C23B2E;box-shadow:0 0 0 3px rgba(194,59,46,.14)" />
+        <button onClick="{{ onAddMonthly }}" style="width:50px;flex:none;border-radius:13px;background:#C23B2E;color:#FBF5E6;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(194,59,46,.3);" style-active="transform:scale(.92)">+</button>
+      </div>
+
+      <sc-for list="{{ monthlyView }}" as="g" hint-placeholder-count="3">
+        <div style="margin:12px 18px 0;background:#FBF5E6;border:1px solid #E6DABE;border-radius:16px;padding:16px;box-shadow:0 6px 14px rgba(60,40,15,.05);">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+            <span style="flex:1;font-size:15px;font-weight:800;color:#2A241C;">{{ g.text }}</span>
+            <button onClick="{{ g.onDelete }}" style="flex:none;color:#C2B49A;font-size:22px;line-height:1;" style-active="transform:scale(.82)">×</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:7px;">
+            <span style="display:inline-flex;align-items:center;gap:5px;background:#F4EAD2;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;color:#9A7B36;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>{{ g.target }}
+            </span>
+          </div>
+          <div style="margin-top:13px;display:flex;align-items:center;gap:12px;">
+            <div style="flex:1;height:11px;background:#EEE2C4;border-radius:999px;overflow:hidden;">
+              <div style="height:100%;width:{{ g.barWidth }}%;background:linear-gradient(90deg,#C99A3B,#E0B84D);border-radius:999px;transition:width .6s cubic-bezier(.2,.7,.2,1);"></div>
+            </div>
+            <span style="font-size:13px;font-weight:900;color:#9A7B36;min-width:38px;text-align:left;">{{ g.pctLabel }}</span>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:13px;">
+            <button onClick="{{ g.onDec }}" style="flex:1;border:1px solid #E0D3B2;border-radius:11px;padding:9px 0;font-size:13px;font-weight:800;color:#5C5345;background:#F7EFD9;" style-active="transform:scale(.95)">− ١٠٪</button>
+            <button onClick="{{ g.onInc }}" style="flex:1;border:1px solid #C7A766;border-radius:11px;padding:9px 0;font-size:13px;font-weight:800;color:#fff;background:#3E7C5A;" style-active="transform:scale(.95)">+ ١٠٪</button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <!-- ============ FINANCE ============ -->
+    <sc-if value="{{ isFinance }}" hint-placeholder-val="{{ true }}">
+    <div style="animation:panelIn .4s cubic-bezier(.2,.7,.2,1) both;">
+      <div style="margin:8px 18px 0;background:#221D17;border-radius:22px;padding:20px;box-shadow:0 14px 30px rgba(34,29,23,.24);position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-30px;left:-20px;font-family:'Aref Ruqaa',serif;font-size:120px;color:rgba(239,199,94,.06);line-height:1;">ج</div>
+        <div style="position:relative;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.16em;color:#8C8270;">الرصيد الحالي</div>
+          <div style="font-size:38px;font-weight:900;color:#FBF5E6;line-height:1.1;margin-top:6px;">{{ balanceLabel }}</div>
+          <div style="display:flex;gap:10px;margin-top:18px;">
+            <div style="flex:1;background:#2D2820;border-radius:13px;padding:11px 12px;">
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#7FAE96;font-weight:700;"><span style="width:18px;height:18px;border-radius:50%;background:#234034;display:flex;align-items:center;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9FD3BB" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M5 12l7 7 7-7"></path></svg></span>دخل الشهر</div>
+              <div style="font-size:16px;color:#9FD3BB;font-weight:900;margin-top:6px;">{{ incomeLabel }}</div>
+            </div>
+            <div style="flex:1;background:#2D2820;border-radius:13px;padding:11px 12px;">
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#D38A80;font-weight:700;"><span style="width:18px;height:18px;border-radius:50%;background:#402420;display:flex;align-items:center;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#E6A79D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg></span>صرف الشهر</div>
+              <div style="font-size:16px;color:#E6A79D;font-weight:900;margin-top:6px;">{{ expenseLabel }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add transaction -->
+      <div style="margin:14px 18px 0;background:#FBF5E6;border:1px solid #E6DABE;border-radius:18px;padding:14px;box-shadow:0 8px 18px rgba(60,40,15,.06);">
+        <div style="display:flex;background:#EEE2C4;border-radius:12px;padding:4px;gap:4px;">
+          <button onClick="{{ onTxOut }}" style="flex:1;border-radius:9px;padding:9px 0;font-size:13px;font-weight:800;{{ txOutStyle }}" style-active="transform:scale(.97)">مصروف</button>
+          <button onClick="{{ onTxIn }}" style="flex:1;border-radius:9px;padding:9px 0;font-size:13px;font-weight:800;{{ txInStyle }}" style-active="transform:scale(.97)">دخل</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <input value="{{ txAmount }}" onChange="{{ onTxAmount }}" type="number" inputmode="numeric" placeholder="المبلغ (ج.م)" style="flex:1;min-width:0;background:#fff;border:1px solid #E0D3B2;border-radius:12px;padding:12px 14px;font-size:15px;font-weight:700;color:#2A241C;text-align:right;outline:none;" style-focus="border-color:#C23B2E;box-shadow:0 0 0 3px rgba(194,59,46,.14)" />
+          <input value="{{ txCat }}" onChange="{{ onTxCat }}" placeholder="البند" style="flex:1;min-width:0;background:#fff;border:1px solid #E0D3B2;border-radius:12px;padding:12px 14px;font-size:15px;font-weight:600;color:#2A241C;text-align:right;outline:none;" style-focus="border-color:#C23B2E;box-shadow:0 0 0 3px rgba(194,59,46,.14)" />
+        </div>
+        <button onClick="{{ onAddTx }}" style="width:100%;margin-top:10px;border-radius:12px;background:#C23B2E;color:#FBF5E6;padding:13px 0;font-size:15px;font-weight:800;box-shadow:0 6px 14px rgba(194,59,46,.28);" style-active="transform:scale(.98)">أضف الحركة</button>
+      </div>
+
+      <sc-if value="{{ hasTopExpenses }}">
+        <div style="margin:14px 18px 0;background:#FBF5E6;border:1px solid #E6DABE;border-radius:18px;padding:16px;box-shadow:0 6px 14px rgba(60,40,15,.05);">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C23B2E;margin-bottom:12px;">أكبر بنود الصرف</div>
+          <sc-for list="{{ topExpenses }}" as="c" hint-placeholder-count="3">
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#2A241C;margin-bottom:5px;"><span>{{ c.cat }}</span><span style="color:#5C5345;">{{ c.amountLabel }}</span></div>
+              <div style="height:9px;background:#EEE2C4;border-radius:999px;overflow:hidden;"><div style="height:100%;width:{{ c.barWidth }}%;background:linear-gradient(90deg,#C23B2E,#D9685C);border-radius:999px;transition:width .6s cubic-bezier(.2,.7,.2,1);"></div></div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="margin:18px 18px 0;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.14em;color:#C23B2E;margin-bottom:4px;padding:0 2px;">آخر الحركات</div>
+        <sc-for list="{{ txView }}" as="x" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:12px;margin-top:9px;background:#FBF5E6;border:1px solid #EADFBF;border-radius:14px;padding:12px 14px;box-shadow:0 4px 12px rgba(60,40,15,.04);">
+            <span style="flex:none;width:38px;height:38px;border-radius:11px;{{ x.iconBg }}display:flex;align-items:center;justify-content:center;">
+              <sc-if value="{{ x.isIn }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3E7C5A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M5 12l7 7 7-7"></path></svg></sc-if>
+              <sc-if value="{{ x.isOut }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C23B2E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg></sc-if>
+            </span>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:14px;font-weight:800;color:#2A241C;">{{ x.cat }}</div>
+              <div style="font-size:11px;font-weight:600;color:#9A8E78;margin-top:1px;">{{ x.dateLabel }}</div>
+            </div>
+            <span style="font-size:14px;font-weight:900;color:{{ x.color }};white-space:nowrap;">{{ x.amountLabel }}</span>
+            <button onClick="{{ x.onDelete }}" style="flex:none;color:#C2B49A;font-size:20px;line-height:1;width:22px;" style-active="transform:scale(.82)">×</button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+  </main>
+
+  <!-- Bottom nav -->
+  <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;z-index:40;display:flex;justify-content:space-around;align-items:center;padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:#221D17;border-top:1px solid #39322A;box-shadow:0 -8px 24px rgba(0,0,0,.2);">
+    <button onClick="{{ tabDash }}" style="position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navDashColor }};padding:6px 12px;font-size:11px;font-weight:800;" style-active="transform:scale(.9)">
+      <sc-if value="{{ navDashActive }}"><span style="position:absolute;top:-3px;width:24px;height:3px;border-radius:2px;background:#EFC75E;"></span></sc-if>
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></svg>
+      <span>الرئيسية</span>
+    </button>
+    <button onClick="{{ tabDaily }}" style="position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navDailyColor }};padding:6px 12px;font-size:11px;font-weight:800;" style-active="transform:scale(.9)">
+      <sc-if value="{{ navDailyActive }}"><span style="position:absolute;top:-3px;width:24px;height:3px;border-radius:2px;background:#EFC75E;"></span></sc-if>
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8 12l3 3 5-6"></path></svg>
+      <span>يومي</span>
+    </button>
+    <button onClick="{{ tabMonthly }}" style="position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navMonthlyColor }};padding:6px 12px;font-size:11px;font-weight:800;" style-active="transform:scale(.9)">
+      <sc-if value="{{ navMonthlyActive }}"><span style="position:absolute;top:-3px;width:24px;height:3px;border-radius:2px;background:#EFC75E;"></span></sc-if>
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M3 9h18"></path><path d="M8 2v4"></path><path d="M16 2v4"></path></svg>
+      <span>شهري</span>
+    </button>
+    <button onClick="{{ tabFinance }}" style="position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navFinanceColor }};padding:6px 12px;font-size:11px;font-weight:800;" style-active="transform:scale(.9)">
+      <sc-if value="{{ navFinanceActive }}"><span style="position:absolute;top:-3px;width:24px;height:3px;border-radius:2px;background:#EFC75E;"></span></sc-if>
+      <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10.5h18"></path><circle cx="17" cy="14" r="1.3"></circle></svg>
+      <span>المالية</span>
+    </button>
+  </nav>
+
+  {{ celebrateEl }}
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:880}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const saved = this.load();
+    const today = this.todayKey();
+    let daily = saved.daily || this.seedDaily();
+    let dailyDate = saved.dailyDate || today;
+    if (dailyDate !== today) { daily = daily.map(t => ({ ...t, done: false })); dailyDate = today; }
+    this.state = {
+      tab: 'dashboard',
+      now: new Date(),
+      daily, dailyDate,
+      monthly: saved.monthly || this.seedMonthly(),
+      tx: saved.tx || this.seedTx(),
+      newDaily: '', newMonthly: '', newMonthlyTarget: '',
+      txType: 'out', txAmount: '', txCat: '',
+      notifOn: saved.notifOn || false,
+      showCelebrate: false,
+      nums: { balance: 0, income: 0, expense: 0, dailyPct: 0, monthlyPct: 0 },
+    };
+    this._raf = {};
+    this._prevAllDone = daily.length > 0 && daily.every(t => t.done);
+  }
+
+  /* ---------- persistence ---------- */
+  load() { try { return JSON.parse(localStorage.getItem('roznama_v1')) || {}; } catch (e) { return {}; } }
+  persist() {
+    try {
+      const s = this.state;
+      localStorage.setItem('roznama_v1', JSON.stringify({ daily: s.daily, dailyDate: s.dailyDate, monthly: s.monthly, tx: s.tx, notifOn: s.notifOn }));
+    } catch (e) {}
+  }
+  todayKey() { return new Date().toISOString().slice(0, 10); }
+  uid() { return 'id' + Date.now() + Math.floor(Math.random() * 1000); }
+
+  /* ---------- seeds ---------- */
+  seedDaily() {
+    return [
+      { id: this.uid(), text: 'صلاة الفجر في وقتها', done: true },
+      { id: this.uid(), text: 'تمرين ٣٠ دقيقة', done: false },
+      { id: this.uid(), text: 'أقرأ ٢٠ صفحة', done: false },
+      { id: this.uid(), text: 'أشرب ٨ كباية مياه', done: false },
+      { id: this.uid(), text: 'أراجع شغل بكرة', done: false },
+    ];
+  }
+  seedMonthly() {
+    return [
+      { id: this.uid(), text: 'أخلّص كورس الـ React', progress: 60, target: '٣٠ يونيو' },
+      { id: this.uid(), text: 'أوفّر ٥٠٠٠ جنيه', progress: 35, target: 'آخر الشهر' },
+      { id: this.uid(), text: 'أقرأ كتابين', progress: 50, target: 'الشهر ده' },
+    ];
+  }
+  seedTx() {
+    const d = new Date();
+    const iso = (off) => new Date(d.getFullYear(), d.getMonth(), Math.max(1, d.getDate() - off)).toISOString();
+    return [
+      { id: this.uid(), type: 'in', amount: 18000, cat: 'المرتب', date: iso(8) },
+      { id: this.uid(), type: 'out', amount: 3200, cat: 'إيجار', date: iso(7) },
+      { id: this.uid(), type: 'out', amount: 1450, cat: 'أكل', date: iso(5) },
+      { id: this.uid(), type: 'in', amount: 2500, cat: 'شغل حر', date: iso(3) },
+      { id: this.uid(), type: 'out', amount: 600, cat: 'مواصلات', date: iso(2) },
+      { id: this.uid(), type: 'out', amount: 900, cat: 'فواتير', date: iso(1) },
+    ];
+  }
+
+  /* ---------- formatting ---------- */
+  toAr(s) { return String(s).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]); }
+  arNum(n) { try { return new Intl.NumberFormat('ar-EG').format(Math.round(n)); } catch (e) { return this.toAr(Math.round(n)); } }
+  egp(n) { return this.arNum(n) + ' ج.م'; }
+  egpShort(n) {
+    const a = Math.abs(n);
+    if (a >= 1000) return this.toAr((n / 1000).toFixed(a >= 10000 ? 0 : 1).replace(/\.0$/, '')) + ' ألف';
+    return this.arNum(n);
+  }
+  fmt(d, o) { try { return new Intl.DateTimeFormat('ar-EG', o).format(d); } catch (e) { return ''; } }
+  fmtNum(d, o) { try { return new Intl.DateTimeFormat('ar-EG-u-nu-arab', o).format(d); } catch (e) { return this.toAr(d.toLocaleDateString()); } }
+  hijri(d) { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-arab', { day: 'numeric', month: 'long', year: 'numeric' }).format(d); } catch (e) { return ''; } }
+  greeting(d) { const h = d.getHours(); if (h < 12) return 'صباح الفل'; if (h < 17) return 'نهارك سعيد'; if (h < 21) return 'مساء الخير'; return 'تصبح على خير'; }
+
+  /* ---------- lifecycle ---------- */
+  componentDidMount() {
+    this._clock = setInterval(() => this.setState({ now: new Date() }), 1000);
+    setTimeout(() => this.syncNums(), 120);
+    if (this.state.notifOn) {
+      const left = this.state.daily.filter(t => !t.done).length;
+      if (left > 0) this.scheduleReminder();
+    }
+  }
+  componentWillUnmount() {
+    clearInterval(this._clock);
+    clearTimeout(this._rem);
+    clearTimeout(this._cel);
+    Object.values(this._raf).forEach(id => cancelAnimationFrame(id));
+  }
+
+  /* ---------- number animation ---------- */
+  derive() {
+    const s = this.state, n = s.now;
+    const sameMonth = (d) => { const x = new Date(d); return x.getMonth() === n.getMonth() && x.getFullYear() === n.getFullYear(); };
+    const income = s.tx.filter(t => t.type === 'in' && sameMonth(t.date)).reduce((a, t) => a + t.amount, 0);
+    const expense = s.tx.filter(t => t.type === 'out' && sameMonth(t.date)).reduce((a, t) => a + t.amount, 0);
+    const balance = s.tx.reduce((a, t) => a + (t.type === 'in' ? t.amount : -t.amount), 0);
+    const dailyPct = s.daily.length ? (s.daily.filter(t => t.done).length / s.daily.length) * 100 : 0;
+    const monthlyPct = s.monthly.length ? s.monthly.reduce((a, g) => a + g.progress, 0) / s.monthly.length : 0;
+    return { income, expense, balance, dailyPct, monthlyPct };
+  }
+  animateNum(key, to, dur = 850) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { this.setState(st => ({ nums: { ...st.nums, [key]: to } })); return; }
+    cancelAnimationFrame(this._raf[key]);
+    const from = this.state.nums[key] || 0;
+    const t0 = performance.now();
+    const ease = p => 1 - Math.pow(1 - p, 3);
+    const step = (t) => {
+      const p = Math.min(1, (t - t0) / dur);
+      const v = from + (to - from) * ease(p);
+      this.setState(st => ({ nums: { ...st.nums, [key]: v } }));
+      if (p < 1) this._raf[key] = requestAnimationFrame(step);
+    };
+    this._raf[key] = requestAnimationFrame(step);
+  }
+  syncNums() { const d = this.derive(); ['balance', 'income', 'expense', 'dailyPct', 'monthlyPct'].forEach(k => this.animateNum(k, d[k])); }
+
+  /* ---------- navigation ---------- */
+  go(tab) { this.setState({ tab }); setTimeout(() => this.syncNums(), 30); }
+
+  /* ---------- daily ---------- */
+  toggleDaily(id) {
+    this.setState(s => ({ daily: s.daily.map(t => t.id === id ? { ...t, done: !t.done } : t) }), () => { this.persist(); this.syncNums(); this.checkCelebrate(); });
+  }
+  addDaily() {
+    const text = this.state.newDaily.trim(); if (!text) return;
+    this.setState(s => ({ daily: [...s.daily, { id: this.uid(), text, done: false }], newDaily: '' }), () => { this.persist(); this.syncNums(); });
+  }
+  deleteDaily(id) { this.setState(s => ({ daily: s.daily.filter(t => t.id !== id) }), () => { this.persist(); this.syncNums(); }); }
+  checkCelebrate() {
+    const all = this.state.daily.length > 0 && this.state.daily.every(t => t.done);
+    if (all && !this._prevAllDone) {
+      this.setState({ showCelebrate: true });
+      this.notify('مبروك! 🎉', 'خلّصت كل مهام النهارده، يوم جامد!');
+      clearTimeout(this._cel);
+      this._cel = setTimeout(() => this.setState({ showCelebrate: false }), 3200);
+    }
+    this._prevAllDone = all;
+  }
+
+  /* ---------- monthly ---------- */
+  addMonthly() {
+    const text = this.state.newMonthly.trim(); if (!text) return;
+    const target = this.state.newMonthlyTarget.trim() || 'الشهر ده';
+    this.setState(s => ({ monthly: [...s.monthly, { id: this.uid(), text, target, progress: 0 }], newMonthly: '', newMonthlyTarget: '' }), () => { this.persist(); this.syncNums(); });
+  }
+  changeMonthly(id, delta) {
+    this.setState(s => ({ monthly: s.monthly.map(g => g.id === id ? { ...g, progress: Math.max(0, Math.min(100, g.progress + delta)) } : g) }), () => { this.persist(); this.syncNums(); });
+  }
+  deleteMonthly(id) { this.setState(s => ({ monthly: s.monthly.filter(g => g.id !== id) }), () => { this.persist(); this.syncNums(); }); }
+
+  /* ---------- finance ---------- */
+  addTx() {
+    const amount = parseFloat(this.state.txAmount); if (!amount || amount <= 0) return;
+    const cat = this.state.txCat.trim() || (this.state.txType === 'in' ? 'دخل' : 'مصروف');
+    const tx = { id: this.uid(), type: this.state.txType, amount, cat, date: new Date().toISOString() };
+    this.setState(s => ({ tx: [...s.tx, tx], txAmount: '', txCat: '' }), () => { this.persist(); this.syncNums(); });
+  }
+  deleteTx(id) { this.setState(s => ({ tx: s.tx.filter(t => t.id !== id) }), () => { this.persist(); this.syncNums(); }); }
+
+  /* ---------- notifications ---------- */
+  notify(title, body) { try { if (window.Notification && Notification.permission === 'granted') new Notification(title, { body }); } catch (e) {} }
+  scheduleReminder() {
+    clearTimeout(this._rem);
+    this._rem = setTimeout(() => {
+      const left = this.state.daily.filter(t => !t.done).length;
+      if (left > 0 && this.state.notifOn) this.notify('فاكر مهامك؟ 🔔', 'لسه عندك ' + this.toAr(left) + ' مهمة النهارده، يلا نخلّصها 💪');
+    }, 12000);
+  }
+  toggleBell() {
+    if (this.state.notifOn) { this.setState({ notifOn: false }, this.persist); return; }
+    if (!('Notification' in window)) { this.setState({ notifOn: true }, this.persist); return; }
+    Notification.requestPermission().then(p => {
+      if (p === 'granted') this.setState({ notifOn: true }, () => { this.persist(); this.notify('روزنامة 🔔', 'هنفكّرك بمهامك اللي ناقصة.'); this.scheduleReminder(); });
+    });
+  }
+
+  /* ---------- clock (split-flap) ---------- */
+  renderClock() {
+    const n = this.state.now;
+    const h = String(n.getHours()).padStart(2, '0');
+    const m = String(n.getMinutes()).padStart(2, '0');
+    const s = String(n.getSeconds()).padStart(2, '0');
+    const seq = [h[0], h[1], 'c', m[0], m[1], 'c', s[0], s[1]];
+    const card = {
+      position: 'relative', width: '46px', height: '62px', borderRadius: '9px', background: '#221D17',
+      color: '#FBF5E6', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: "'Cairo',sans-serif", fontWeight: 900, fontSize: '38px', perspective: '160px',
+      boxShadow: 'inset 0 0 0 1px rgba(251,245,230,.07), 0 7px 14px rgba(0,0,0,.2)', overflow: 'hidden',
+    };
+    const els = seq.map((ch, i) => {
+      if (ch === 'c') return React.createElement('div', { key: 'c' + i, style: { color: '#C23B2E', fontFamily: "'Cairo',sans-serif", fontWeight: 900, fontSize: '34px', animation: 'blink 1s steps(1,end) infinite' } }, ':');
+      return React.createElement('div', { key: 'card' + i, style: card },
+        React.createElement('div', { key: ch, style: { animation: 'flapIn .55s cubic-bezier(.2,.7,.2,1) both', transformOrigin: 'center top', backfaceVisibility: 'hidden' } }, this.toAr(ch)),
+        React.createElement('div', { style: { position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: 'rgba(0,0,0,.4)' } })
+      );
+    });
+    return React.createElement('div', { style: { display: 'flex', gap: '6px', justifyContent: 'center', alignItems: 'center', direction: 'ltr' } }, els);
+  }
+
+  /* ---------- celebration ---------- */
+  renderCelebrate() {
+    if (!this.state.showCelebrate) return null;
+    const colors = ['#C23B2E', '#3E7C5A', '#E0B84D', '#FBF5E6', '#9E2A20'];
+    const pieces = [];
+    for (let i = 0; i < 38; i++) {
+      const left = Math.random() * 100, c = colors[i % colors.length];
+      const delay = Math.random() * 0.4, dur = 1.6 + Math.random() * 1.3;
+      const size = 6 + Math.random() * 8, rot = Math.random() * 360;
+      pieces.push(React.createElement('div', { key: i, style: { position: 'absolute', top: '-24px', left: left + '%', width: size + 'px', height: (size * 1.5) + 'px', background: c, borderRadius: '2px', transform: 'rotate(' + rot + 'deg)', animation: 'confetti ' + dur + 's cubic-bezier(.25,.6,.4,1) ' + delay + 's forwards' } }));
+    }
+    return React.createElement('div', { style: { position: 'fixed', inset: 0, zIndex: 60, pointerEvents: 'none', overflow: 'hidden' } },
+      React.createElement('div', { style: { position: 'absolute', inset: 0, background: 'rgba(33,28,22,.32)', animation: 'fadeIn .3s ease both' } }),
+      ...pieces,
+      React.createElement('div', { style: { position: 'absolute', top: '44%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'center', animation: 'celebPop .6s cubic-bezier(.2,1.3,.4,1) both' } },
+        React.createElement('div', { style: { width: '100px', height: '100px', margin: '0 auto 16px', borderRadius: '50%', background: '#3E7C5A', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 14px 34px rgba(62,124,90,.5)' } },
+          React.createElement('svg', { width: 50, height: 50, viewBox: '0 0 24 24', fill: 'none', stroke: '#FBF5E6', strokeWidth: 3, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M5 13l4 4L19 7' }))),
+        React.createElement('div', { style: { fontFamily: "'Aref Ruqaa',serif", fontSize: '32px', fontWeight: 700, color: '#FBF5E6' } }, 'مبروك يا بطل!'),
+        React.createElement('div', { style: { fontFamily: "'Cairo',sans-serif", fontSize: '16px', fontWeight: 600, color: '#EADFC4', marginTop: '6px' } }, 'خلّصت كل مهام النهارده')
+      )
+    );
+  }
+
+  /* ---------- render values ---------- */
+  renderVals() {
+    const s = this.state, n = s.now, nm = s.nums;
+    const d = this.derive();
+    const dailyTotal = s.daily.length, dailyDone = s.daily.filter(t => t.done).length;
+    const mkTask = (t) => ({
+      id: t.id, text: t.text, done: t.done,
+      onToggle: () => this.toggleDaily(t.id), onDelete: () => this.deleteDaily(t.id),
+      textStyle: t.done ? 'text-decoration:line-through;color:#A89B7E;' : 'color:#2A241C;',
+      boxStyle: t.done ? 'background:#3E7C5A;border-color:#3E7C5A;' : 'background:#FBF5E6;border-color:#CBBF9E;',
+    });
+    const C = 326.726;
+    const monthlyAvg = Math.round(d.monthlyPct);
+    // top expenses this month
+    const sameMonth = (x) => { const dt = new Date(x); return dt.getMonth() === n.getMonth() && dt.getFullYear() === n.getFullYear(); };
+    const catMap = {};
+    s.tx.filter(t => t.type === 'out' && sameMonth(t.date)).forEach(t => { catMap[t.cat] = (catMap[t.cat] || 0) + t.amount; });
+    const cats = Object.keys(catMap).map(k => ({ cat: k, amount: catMap[k] })).sort((a, b) => b.amount - a.amount).slice(0, 3);
+    const maxCat = cats.length ? cats[0].amount : 1;
+    const segActive = 'background:#fff;color:#C23B2E;box-shadow:0 2px 6px rgba(60,40,15,.1);';
+    const segIdle = 'background:transparent;color:#8B8270;';
+
+    return {
+      isDash: s.tab === 'dashboard', isDaily: s.tab === 'daily', isMonthly: s.tab === 'monthly', isFinance: s.tab === 'finance',
+      greeting: this.greeting(n),
+      dayName: this.fmt(n, { weekday: 'long' }),
+      gregDate: this.fmtNum(n, { day: 'numeric', month: 'long', year: 'numeric' }),
+      hijriDate: this.hijri(n),
+      clockEl: this.renderClock(), celebrateEl: this.renderCelebrate(),
+      bellOn: s.notifOn, bellColor: s.notifOn ? '#3E7C5A' : '#8B7E62', onToggleBell: () => this.toggleBell(),
+      // nav
+      tabDash: () => this.go('dashboard'), tabDaily: () => this.go('daily'), tabMonthly: () => this.go('monthly'), tabFinance: () => this.go('finance'),
+      navDashColor: s.tab === 'dashboard' ? '#EFC75E' : '#8C8270', navDailyColor: s.tab === 'daily' ? '#EFC75E' : '#8C8270',
+      navMonthlyColor: s.tab === 'monthly' ? '#EFC75E' : '#8C8270', navFinanceColor: s.tab === 'finance' ? '#EFC75E' : '#8C8270',
+      navDashActive: s.tab === 'dashboard', navDailyActive: s.tab === 'daily', navMonthlyActive: s.tab === 'monthly', navFinanceActive: s.tab === 'finance',
+      // daily
+      dailyView: s.daily.map(mkTask), dashTopDaily: s.daily.slice(0, 3).map(mkTask),
+      dailyTotal: this.toAr(dailyTotal), dailyDoneCount: this.toAr(dailyDone),
+      dailyPctLabel: this.toAr(Math.round(nm.dailyPct)) + '٪',
+      dailyRealPct: dailyTotal ? Math.round(dailyDone / dailyTotal * 100) : 0,
+      dailyRingOffset: C * (1 - nm.dailyPct / 100),
+      allDoneHint: dailyTotal > 0 && dailyDone === dailyTotal,
+      newDaily: s.newDaily, onNewDaily: (e) => this.setState({ newDaily: e.target.value }),
+      onDailyKey: (e) => { if (e.key === 'Enter') this.addDaily(); }, onAddDaily: () => this.addDaily(),
+      // monthly
+      monthLabel: this.fmt(n, { month: 'long' }),
+      monthlyView: s.monthly.map(g => ({
+        id: g.id, text: g.text, target: g.target, barWidth: g.progress, pctLabel: this.toAr(Math.round(g.progress)) + '٪',
+        onInc: () => this.changeMonthly(g.id, 10), onDec: () => this.changeMonthly(g.id, -10), onDelete: () => this.deleteMonthly(g.id),
+      })),
+      monthlyAvgLabel: this.toAr(Math.round(nm.monthlyPct)) + '٪', monthlyAvgWidth: monthlyAvg,
+      monthlyCountLabel: this.toAr(s.monthly.length),
+      newMonthly: s.newMonthly, onNewMonthly: (e) => this.setState({ newMonthly: e.target.value }),
+      newMonthlyTarget: s.newMonthlyTarget, onNewMonthlyTarget: (e) => this.setState({ newMonthlyTarget: e.target.value }),
+      onAddMonthly: () => this.addMonthly(),
+      // finance
+      balanceLabel: this.egp(nm.balance), incomeLabel: this.egp(nm.income), expenseLabel: this.egp(nm.expense),
+      incomeShort: this.egpShort(d.income), expenseShort: this.egpShort(d.expense),
+      txOutStyle: s.txType === 'out' ? segActive : segIdle, txInStyle: s.txType === 'in' ? segActive : segIdle,
+      onTxOut: () => this.setState({ txType: 'out' }), onTxIn: () => this.setState({ txType: 'in' }),
+      txAmount: s.txAmount, onTxAmount: (e) => this.setState({ txAmount: e.target.value }),
+      txCat: s.txCat, onTxCat: (e) => this.setState({ txCat: e.target.value }), onAddTx: () => this.addTx(),
+      txView: [...s.tx].sort((a, b) => new Date(b.date) - new Date(a.date)).map(t => ({
+        id: t.id, isIn: t.type === 'in', isOut: t.type === 'out', cat: t.cat,
+        amountLabel: (t.type === 'in' ? '+ ' : '− ') + this.egp(t.amount),
+        dateLabel: this.fmtNum(new Date(t.date), { weekday: 'short', day: 'numeric', month: 'short' }),
+        color: t.type === 'in' ? '#3E7C5A' : '#C23B2E',
+        iconBg: t.type === 'in' ? 'background:#E8F2EA;' : 'background:#F8E7E4;',
+        onDelete: () => this.deleteTx(t.id),
+      })),
+      hasTopExpenses: cats.length > 0,
+      topExpenses: cats.map(c => ({ cat: c.cat, amountLabel: this.egp(c.amount), barWidth: Math.round(c.amount / maxCat * 100) })),
+    };
+  }
+}
+</script>
+</body>
+</html>

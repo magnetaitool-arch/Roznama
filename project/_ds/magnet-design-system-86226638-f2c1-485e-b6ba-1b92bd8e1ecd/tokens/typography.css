@@ -1,0 +1,88 @@
+/* ===========================================================================
+   MAGNET · TYPOGRAPHY TOKENS
+   Display = Archivo (Black/ExtraBold, UPPERCASE, tight).
+   Body/UI = Inter.  Arabic = Cairo (display) + Tajawal (body).
+   ===========================================================================*/
+
+:root {
+  /* --- Families --------------------------------------------------------- */
+  --font-display: 'Archivo', 'Arial Black', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-ar-display: 'Cairo', 'Tajawal', sans-serif;
+  --font-ar-body:    'Tajawal', 'Cairo', sans-serif;
+
+  /* --- Weights ---------------------------------------------------------- */
+  --fw-regular: 400;   /* @kind font */
+  --fw-medium:  500;   /* @kind font */
+  --fw-semibold: 600;  /* @kind font */
+  --fw-bold:    700;   /* @kind font */
+  --fw-extrabold: 800; /* @kind font */
+  --fw-black:   900;   /* @kind font */
+
+  /* --- Type scale (desktop) --------------------------------------------- */
+  --fs-hero:   72px;   /* H1 / hero  56–80 */
+  --fs-h1:     56px;
+  --fs-h2:     42px;   /* 36–48 */
+  --fs-h3:     28px;   /* 24–32 */
+  --fs-body-lg: 19px;  /* 18–20 */
+  --fs-body:   16px;
+  --fs-caption: 13px;  /* 12–14, uppercase label */
+
+  /* --- Line heights ----------------------------------------------------- */
+  --lh-tight:  1.02;   /* @kind font */
+  --lh-snug:   1.15;   /* @kind font */
+  --lh-body:   1.6;    /* @kind font */
+
+  /* --- Tracking --------------------------------------------------------- */
+  --ls-headline: -0.02em;  /* @kind font */
+  --ls-label:    0.05em;   /* @kind font */
+  --ls-normal:   0;        /* @kind font */
+
+  /* --- Semantic role aliases -------------------------------------------- */
+  --text-hero-family: var(--font-display);
+  --text-hero-weight: var(--fw-black);
+  --text-label-family: var(--font-body);
+}
+
+/* ---------------------------------------------------------------------------
+   Optional utility classes — handy in static specimen / kit HTML.
+   Components reference the variables directly.
+   ------------------------------------------------------------------------- */
+.t-hero,
+.t-h1, .t-h2, .t-h3 {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-headline);
+  line-height: var(--lh-tight);
+  font-weight: var(--fw-black);
+  margin: 0;
+}
+.t-hero { font-size: var(--fs-hero); }
+.t-h1   { font-size: var(--fs-h1); }
+.t-h2   { font-size: var(--fs-h2); font-weight: var(--fw-extrabold); }
+.t-h3   { font-size: var(--fs-h3); font-weight: var(--fw-bold); line-height: var(--lh-snug); }
+
+.t-body-lg { font: var(--fw-regular) var(--fs-body-lg)/var(--lh-body) var(--font-body); margin: 0; }
+.t-body    { font: var(--fw-regular) var(--fs-body)/var(--lh-body) var(--font-body); margin: 0; }
+
+.t-label {
+  font-family: var(--font-body);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-label);
+  margin: 0;
+}
+
+/* Lime highlight word inside a headline */
+.t-accent { color: var(--lime); }
+
+/* Arabic / RTL */
+[dir="rtl"] .t-hero,
+[dir="rtl"] .t-h1, [dir="rtl"] .t-h2, [dir="rtl"] .t-h3 {
+  font-family: var(--font-ar-display);
+  letter-spacing: 0;          /* Arabic doesn't take Latin tracking */
+  text-transform: none;       /* no uppercase in Arabic */
+}
+[dir="rtl"] .t-body,
+[dir="rtl"] .t-body-lg { font-family: var(--font-ar-body); }

@@ -1,0 +1,23 @@
+/* ===========================================================================
+   MAGNET · SPACING & GRID TOKENS
+   Base unit 8px. All spacing in multiples. Generous negative space.
+   ===========================================================================*/
+
+:root {
+  --space-0: 0;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-12: 96px;
+  --space-16: 128px;
+
+  /* Layout */
+  --content-max: 1200px;   /* max content width (web/landing) */
+  --grid-cols: 12;        /* @kind other */
+  --grid-gutter: 24px;
+  --section-pad-y: var(--space-12);   /* vertical rhythm between sections */
+  --social-inset: 80px;    /* inner margin on a 1080 social canvas */
+}
