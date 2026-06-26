@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import type { Tab } from "../lib/tabs";
 import { greeting } from "../lib/format";
+import { RoznamaLogo } from "./RoznamaLogo";
 
 const iconBtn: React.CSSProperties = {
   position: "relative",
@@ -43,11 +44,11 @@ export function Header({
         <div style={{ fontSize: 12, fontWeight: 700, color: "var(--brand)", letterSpacing: ".04em", marginBottom: 1 }}>
           {greeting(new Date())}
         </div>
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 3 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <RoznamaLogo size={30} />
           <span style={{ fontFamily: "'Aref Ruqaa',serif", fontSize: 28, fontWeight: 700, color: "var(--ink-strong)", lineHeight: 0.9 }}>
             روزنامة
           </span>
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--red)", display: "inline-block", marginBottom: 4 }} />
         </div>
       </div>
 

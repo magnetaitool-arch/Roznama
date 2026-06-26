@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
+import { RoznamaLogo } from "../RoznamaLogo";
 
 export function AuthScreen({ onGuest }: { onGuest: () => void }) {
   const { signIn, signUp } = useAuth();
@@ -47,11 +48,8 @@ export function AuthScreen({ onGuest }: { onGuest: () => void }) {
     <div style={{ minHeight: "100vh", background: "radial-gradient(130% 60% at 50% 0%, var(--grad-from) 0%, var(--grad-mid) 60%, var(--grad-to) 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1] }} style={{ width: "100%", maxWidth: 380 }}>
         <div style={{ textAlign: "center", marginBottom: 22 }}>
-          <div style={{ display: "inline-flex", alignItems: "flex-end", gap: 4 }}>
-            <span style={{ fontFamily: "'Aref Ruqaa',serif", fontSize: 44, fontWeight: 700, color: "var(--ink-strong)", lineHeight: 0.9 }}>روزنامة</span>
-            <span style={{ width: 11, height: 11, borderRadius: "50%", background: "var(--red)", marginBottom: 7 }} />
-          </div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "var(--brand)", marginTop: 8 }}>نظّم يومك، عاداتك، وفلوسك</div>
+          <RoznamaLogo size={92} word />
+          <div style={{ fontSize: 13, fontWeight: 700, color: "var(--brand)", marginTop: 12 }}>نظّم يومك، عاداتك، وفلوسك</div>
         </div>
 
         <div style={{ background: "var(--paper)", border: "1px solid var(--border)", borderRadius: 22, padding: 20, boxShadow: "var(--shadow-hero)" }}>
