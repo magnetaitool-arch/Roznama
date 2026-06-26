@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import { api } from "../../lib/api";
 import { supabase } from "../../lib/supabase";
 import { downloadBlob } from "../../lib/download";
+import { fileToAvatar, getAvatar, setAvatar } from "../../lib/avatar";
 
 async function authHeader(): Promise<Record<string, string>> {
   if (!supabase) return {};
@@ -35,7 +36,19 @@ export function Settings({ store, onRequestNotif, onGo }: { store: RoznamaStore;
   const { theme, setTheme } = useTheme();
   const { authed, user, cloudEnabled, signOut } = useAuth();
   const fileRef = useRef<HTMLInputElement>(null);
+  const avatarRef = useRef<HTMLInputElement>(null);
+  const [avatar, setAvatarState] = useState<string | null>(getAvatar());
   const [note, setNote] = useState<string | null>(null);
+
+  async function onPickAvatar(file: File) {
+    try {
+      const dataUrl = await fileToAvatar(file);
+      setAvatar(dataUrl);
+      setAvatarState(dataUrl);
+    } catch (e) {
+      setNote((e as Error).message);
+    }
+  }
 
   async function exportBackup() {
     setNote(null);
@@ -86,9 +99,19 @@ export function Settings({ store, onRequestNotif, onGo }: { store: RoznamaStore;
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}>
       {/* Profile */}
       <div style={{ ...card, marginTop: 8, display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{ width: 54, height: 54, borderRadius: "50%", background: "var(--red)", color: "#FBF5E6", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Aref Ruqaa',serif", fontSize: 26, fontWeight: 700 }}>
-          {(store.displayName || user?.email || "ر").slice(0, 1).toUpperCase()}
-        </div>
+        <button
+          onClick={() => avatarRef.current?.click()}
+          aria-label="غيّر صورتك"
+          style={{ position: "relative", width: 54, height: 54, borderRadius: "50%", background: "var(--red)", color: "#FBF5E6", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Aref Ruqaa',serif", fontSize: 26, fontWeight: 700, overflow: "hidden", padding: 0, flex: "none" }}
+        >
+          {avatar ? (
+            <img src={avatar} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          ) : (
+            (store.displayName || user?.email || "ر").slice(0, 1).toUpperCase()
+          )}
+          <span style={{ position: "absolute", bottom: 0, left: 0, width: "100%", background: "rgba(0,0,0,.45)", fontSize: 9, fontWeight: 700, padding: "1px 0", textAlign: "center" }}>📷</span>
+        </button>
+        <input ref={avatarRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => e.target.files?.[0] && onPickAvatar(e.target.files[0])} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 16, fontWeight: 800, color: "var(--ink)" }}>{store.displayName || (authed ? user?.email : "ضيف")}</div>
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 3 }}>
