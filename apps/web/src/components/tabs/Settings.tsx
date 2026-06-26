@@ -152,12 +152,31 @@ export function Settings({ store, onRequestNotif, onGo }: { store: RoznamaStore;
       <div style={card}>
         <div style={label}>الحساب</div>
         {authed ? (
-          <motion.button whileTap={{ scale: 0.98 }} onClick={() => signOut()} style={{ width: "100%", borderRadius: 12, background: "var(--red-soft-bg)", color: "var(--red)", border: "1px solid var(--red-soft-border)", padding: "12px 0", fontSize: 14, fontWeight: 800 }}>تسجيل الخروج</motion.button>
+          <>
+            <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 10 }}>
+              داخل بحساب · بياناتك بتتزامن ع السحابة.
+            </div>
+            <motion.button whileTap={{ scale: 0.98 }} onClick={() => signOut()} style={{ width: "100%", borderRadius: 12, background: "var(--red-soft-bg)", color: "var(--red)", border: "1px solid var(--red-soft-border)", padding: "12px 0", fontSize: 14, fontWeight: 800 }}>تسجيل الخروج</motion.button>
+          </>
+        ) : cloudEnabled ? (
+          <>
+            <div style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.7, marginBottom: 10 }}>
+              أنت في الوضع المحلي (بدون حساب). سجّل الدخول أو اعمل حساب عشان بياناتك تتزامن على كل أجهزتك.
+            </div>
+            <motion.button
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                localStorage.removeItem("roznama_guest");
+                window.location.reload();
+              }}
+              style={{ width: "100%", borderRadius: 12, background: "var(--red)", color: "#FBF5E6", padding: "13px 0", fontSize: 15, fontWeight: 800, boxShadow: "0 6px 14px rgba(194,59,46,.28)" }}
+            >
+              تسجيل الدخول / إنشاء حساب
+            </motion.button>
+          </>
         ) : (
           <div style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.7 }}>
-            {cloudEnabled
-              ? "أنت في الوضع المحلي. سجّل الدخول من شاشة البداية لمزامنة بياناتك على كل أجهزتك."
-              : "المزامنة السحابية غير مفعّلة في هذه النسخة — بياناتك محفوظة محليًا على الجهاز."}
+            المزامنة السحابية غير مفعّلة في هذه النسخة — بياناتك محفوظة محليًا على الجهاز.
           </div>
         )}
       </div>
