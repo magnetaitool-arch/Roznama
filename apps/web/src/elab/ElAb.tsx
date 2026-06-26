@@ -4,12 +4,13 @@ import { useRouter } from "../lib/router";
 import { fmt, fmtNum, toAr } from "../lib/format";
 import { Celebration } from "../components/Celebration";
 import { ElAbLogo } from "./ElAbLogo";
+import { About } from "./About";
 import { FocusMode } from "./FocusMode";
 import { useElAb } from "./store";
 import { AREA_ORDER, AREAS, type ElTask } from "./types";
 
 const C = { bg: "#FAF6EE", ink: "#1A1A1A", red: "#C1272D", gold: "#E0A100", green: "#2E7D52", paper: "#FFFDF7", border: "#E7DEC9", muted: "#857C68" };
-type Screen = "home" | "plan" | "review";
+type Screen = "home" | "plan" | "review" | "about";
 
 function EnergyPicker({ value, onChange }: { value: number; onChange: (n: number) => void }) {
   return (
@@ -180,13 +181,15 @@ export function ElAb() {
             {screen === "review" && (
               <Review store={s} />
             )}
+
+            {screen === "about" && <About />}
           </motion.div>
         </AnimatePresence>
       </main>
 
       {/* Bottom nav */}
       <nav style={{ position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 460, display: "flex", justifyContent: "space-around", background: C.ink, padding: "10px 8px calc(10px + env(safe-area-inset-bottom))", zIndex: 40 }}>
-        {([["home", "الهوم"], ["plan", "التخطيط"], ["review", "المراجعة"]] as [Screen, string][]).map(([k, label]) => (
+        {([["home", "الهوم"], ["plan", "التخطيط"], ["review", "المراجعة"], ["about", "عن الأب"]] as [Screen, string][]).map(([k, label]) => (
           <button key={k} onClick={() => setScreen(k)} style={{ flex: 1, color: screen === k ? C.gold : "#8C8270", fontSize: 13, fontWeight: 800, padding: "6px 0" }}>
             {label}
           </button>
