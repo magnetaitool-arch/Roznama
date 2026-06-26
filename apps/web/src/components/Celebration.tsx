@@ -63,10 +63,10 @@ export function Celebration() {
           </svg>
         </div>
         <div style={{ fontFamily: "'Aref Ruqaa',serif", fontSize: 32, fontWeight: 700, color: "#FBF5E6" }}>
-          مبروك يا بطل!
+          تمّ إنجاز اليوم
         </div>
         <div style={{ fontFamily: "'Cairo',sans-serif", fontSize: 16, fontWeight: 600, color: "#EADFC4", marginTop: 6 }}>
-          خلّصت كل مهام النهارده
+          خلّصت كل مهام النهاردة
         </div>
       </motion.div>
     </div>

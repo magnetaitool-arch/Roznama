@@ -2,9 +2,12 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { RoznamaStore } from "../../hooks/useRoznama";
 import { toAr } from "../../lib/format";
+import { FocusMode } from "../FocusMode";
 
 export function Daily({ store }: { store: RoznamaStore }) {
   const [text, setText] = useState("");
+  const [focusId, setFocusId] = useState<string | null>(null);
+  const focusTask = store.daily.find((t) => t.id === focusId) ?? null;
   const done = store.daily.filter((t) => t.done).length;
   const total = store.daily.length;
   const pct = total ? Math.round((done / total) * 100) : 0;
@@ -50,7 +53,7 @@ export function Daily({ store }: { store: RoznamaStore }) {
                   <path d="M5 12l4 4L19 7" />
                 </svg>
               </span>
-              <span style={{ fontSize: 14, fontWeight: 800, color: "var(--green)" }}>يوم جامد! خلّصت كل مهامك.</span>
+              <span style={{ fontSize: 14, fontWeight: 800, color: "var(--green)" }}>تم إنجاز كل مهام اليوم.</span>
             </div>
           </motion.div>
         )}
@@ -94,6 +97,11 @@ export function Daily({ store }: { store: RoznamaStore }) {
               <span style={{ flex: 1, fontSize: 15, fontWeight: 600, textDecoration: task.done ? "line-through" : "none", color: task.done ? "var(--muted-3)" : "var(--ink)" }}>
                 {task.text}
               </span>
+              {!task.done && (
+                <motion.button whileTap={{ scale: 0.88 }} onClick={() => setFocusId(task.id)} aria-label="ركّز" style={{ flex: "none", display: "flex", alignItems: "center", justifyContent: "center", width: 30, height: 30, borderRadius: 9, background: "var(--paper-sunken)", color: "var(--red)" }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                </motion.button>
+              )}
               <motion.button whileTap={{ scale: 0.82 }} onClick={() => store.deleteDaily(task.id)} style={{ flex: "none", color: "var(--muted-3)", fontSize: 22, lineHeight: 1, width: 26, height: 26 }}>
                 ×
               </motion.button>
@@ -101,6 +109,16 @@ export function Daily({ store }: { store: RoznamaStore }) {
           ))}
         </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {focusTask && (
+          <FocusMode
+            title={focusTask.text}
+            onDone={() => store.toggleDaily(focusTask.id)}
+            onClose={() => setFocusId(null)}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

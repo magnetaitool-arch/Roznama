@@ -2,17 +2,14 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
-import { RouterProvider } from "./lib/router";
-import { Root } from "./Root";
+import App from "./App";
 import "./styles/global.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
       <AuthProvider>
-        <RouterProvider>
-          <Root />
-        </RouterProvider>
+        <App />
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>,

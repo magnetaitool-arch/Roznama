@@ -45,7 +45,7 @@ function MainApp() {
     const all = store.daily.length > 0 && store.daily.every((t) => t.done);
     if (all && !prevAllDone.current) {
       setCelebrate(true);
-      notify("مبروك! 🎉", "خلّصت كل مهام النهارده، يوم جامد!");
+      notify("تمّ إنجاز اليوم", "خلّصت كل مهام النهاردة.");
       window.clearTimeout(celTimer.current);
       celTimer.current = window.setTimeout(() => setCelebrate(false), 3200);
     }
