@@ -17,6 +17,7 @@ import type { Tab } from "./lib/tabs";
 // Heavy tabs (Recharts, backup tooling) are split into their own chunks.
 const Analytics = lazy(() => import("./components/tabs/Analytics").then((m) => ({ default: m.Analytics })));
 const Settings = lazy(() => import("./components/tabs/Settings").then((m) => ({ default: m.Settings })));
+const Admin = lazy(() => import("./components/tabs/Admin").then((m) => ({ default: m.Admin })));
 
 const GUEST_KEY = "roznama_guest";
 
@@ -111,7 +112,8 @@ function MainApp() {
               {tab === "monthly" && <Monthly store={store} />}
               {tab === "finance" && <Finance store={store} />}
               {tab === "analytics" && <Analytics store={store} />}
-              {tab === "settings" && <Settings store={store} onRequestNotif={requestNotif} />}
+              {tab === "settings" && <Settings store={store} onRequestNotif={requestNotif} onGo={setTab} />}
+              {tab === "admin" && <Admin store={store} />}
             </Suspense>
           </div>
         </AnimatePresence>

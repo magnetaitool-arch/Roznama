@@ -91,4 +91,14 @@ export const api = {
   },
 
   getBackup: () => req<unknown>("/backup"),
+
+  getAdminOverview: () => req<AdminOverview>("/admin/overview"),
 };
+
+export interface AdminOverview {
+  userCount: number;
+  adminCount: number;
+  newToday: number;
+  recentUsers: { displayName: string; role: string; createdAt: string }[];
+  signupsByDay: { day: string; count: number }[];
+}

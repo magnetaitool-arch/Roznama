@@ -89,14 +89,8 @@ export function ElAb() {
   return (
     <div dir="rtl" style={{ minHeight: "100vh", background: C.bg, color: C.ink, fontFamily: "'Cairo',sans-serif", maxWidth: 460, margin: "0 auto", position: "relative", paddingBottom: 96 }}>
       {/* Header */}
-      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 20px 10px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
-          <ElAbLogo size={44} />
-          <div>
-            <div style={{ fontFamily: "'Reem Kufi','Cairo',sans-serif", fontSize: 22, fontWeight: 800, color: C.ink, lineHeight: 1 }}>الأب</div>
-            <div style={{ fontSize: 11, fontWeight: 700, color: C.gold, letterSpacing: ".1em", marginTop: 2 }}>روزنامة</div>
-          </div>
-        </div>
+      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px 8px" }}>
+        <ElAbLogo size={56} />
         <button onClick={() => navigate("/")} style={{ display: "flex", alignItems: "center", gap: 5, background: C.paper, border: `1px solid ${C.border}`, borderRadius: 12, padding: "8px 12px", fontSize: 12, fontWeight: 800, color: C.muted }}>
           روزنامة ←
         </button>

@@ -36,6 +36,7 @@ const ICONS: Record<Tab, React.ReactNode> = {
   ),
   analytics: <path d="M3 3v18h18" />,
   settings: <circle cx="12" cy="12" r="3" />,
+  admin: <path d="M3 3v18h18" />,
 };
 
 export function BottomNav({ tab, onGo }: { tab: Tab; onGo: (t: Tab) => void }) {

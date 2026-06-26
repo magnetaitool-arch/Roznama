@@ -32,7 +32,7 @@ const THEMES: { key: ThemePref; label: string }[] = [
   { key: "system", label: "النظام" },
 ];
 
-export function Settings({ store, onRequestNotif }: { store: RoznamaStore; onRequestNotif: () => void }) {
+export function Settings({ store, onRequestNotif, onGo }: { store: RoznamaStore; onRequestNotif: () => void; onGo: (t: "admin") => void }) {
   const { theme, setTheme } = useTheme();
   const { authed, user, cloudEnabled, signOut } = useAuth();
   const { navigate } = useRouter();
@@ -99,6 +99,22 @@ export function Settings({ store, onRequestNotif }: { store: RoznamaStore; onReq
           </div>
         </div>
       </div>
+
+      {/* Admin entry (admins only) */}
+      {store.role === "admin" && (
+        <motion.button
+          whileTap={{ scale: 0.99 }}
+          onClick={() => onGo("admin")}
+          style={{ ...card, width: "calc(100% - 36px)", display: "flex", alignItems: "center", gap: 12, textAlign: "right" }}
+        >
+          <span style={{ fontSize: 24 }}>📊</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 15, fontWeight: 800, color: "var(--ink)" }}>لوحة الأدمن</div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--muted-2)", marginTop: 2 }}>متابعة المستخدمين والتسجيلات</div>
+          </div>
+          <span style={{ color: "var(--muted-2)", fontSize: 18 }}>←</span>
+        </motion.button>
+      )}
 
       {/* El-Ab module entry */}
       <motion.button
