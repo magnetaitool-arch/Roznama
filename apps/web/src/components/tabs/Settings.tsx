@@ -4,6 +4,7 @@ import type { BackupBundle, ThemePref } from "@roznama/shared";
 import type { RoznamaStore } from "../../hooks/useRoznama";
 import { useTheme } from "../../context/ThemeContext";
 import { useAuth } from "../../context/AuthContext";
+import { useRouter } from "../../lib/router";
 import { api } from "../../lib/api";
 import { supabase } from "../../lib/supabase";
 import { downloadBlob } from "../../lib/download";
@@ -34,6 +35,7 @@ const THEMES: { key: ThemePref; label: string }[] = [
 export function Settings({ store, onRequestNotif }: { store: RoznamaStore; onRequestNotif: () => void }) {
   const { theme, setTheme } = useTheme();
   const { authed, user, cloudEnabled, signOut } = useAuth();
+  const { navigate } = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const [note, setNote] = useState<string | null>(null);
 
@@ -97,6 +99,20 @@ export function Settings({ store, onRequestNotif }: { store: RoznamaStore; onReq
           </div>
         </div>
       </div>
+
+      {/* El-Ab module entry */}
+      <motion.button
+        whileTap={{ scale: 0.99 }}
+        onClick={() => navigate("/ab")}
+        style={{ ...card, width: "calc(100% - 36px)", display: "flex", alignItems: "center", gap: 12, textAlign: "right", background: "#1A1A1A", border: "none" }}
+      >
+        <span style={{ fontSize: 26 }}>🗓️</span>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 15, fontWeight: 800, color: "#FAF6EE" }}>افتح وحدة «الأب»</div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "#E0A100", marginTop: 2 }}>نظام التخطيط · التنفيذ · المتابعة · التقييم</div>
+        </div>
+        <span style={{ color: "#8C8270", fontSize: 18 }}>←</span>
+      </motion.button>
 
       {/* Appearance */}
       <div style={card}>
