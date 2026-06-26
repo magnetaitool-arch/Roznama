@@ -44,12 +44,7 @@ export function Header({
         <div style={{ fontSize: 12, fontWeight: 700, color: "var(--brand)", letterSpacing: ".04em", marginBottom: 1 }}>
           {greeting(new Date())}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <RoznamaLogo size={30} />
-          <span style={{ fontFamily: "'Aref Ruqaa',serif", fontSize: 28, fontWeight: 700, color: "var(--ink-strong)", lineHeight: 0.9 }}>
-            روزنامة
-          </span>
-        </div>
+        <RoznamaLogo size={46} />
       </div>
 
       <div style={{ display: "flex", gap: 8 }}>

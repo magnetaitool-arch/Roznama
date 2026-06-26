@@ -48,7 +48,7 @@ export function AuthScreen({ onGuest }: { onGuest: () => void }) {
     <div style={{ minHeight: "100vh", background: "radial-gradient(130% 60% at 50% 0%, var(--grad-from) 0%, var(--grad-mid) 60%, var(--grad-to) 100%)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1] }} style={{ width: "100%", maxWidth: 380 }}>
         <div style={{ textAlign: "center", marginBottom: 22 }}>
-          <RoznamaLogo size={92} word />
+          <RoznamaLogo size={132} />
           <div style={{ fontSize: 13, fontWeight: 700, color: "var(--brand)", marginTop: 12 }}>نظّم يومك، عاداتك، وفلوسك</div>
         </div>
 
