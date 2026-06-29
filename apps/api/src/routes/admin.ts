@@ -35,11 +35,14 @@ adminRouter.get(
     const rows = profiles.data ?? [];
 
     // Recent signups (no private content — just name/role/date).
-    const recentUsers = rows.slice(0, 25).map((r) => ({
+    const recentUsers = rows.slice(0, 50).map((r) => ({
       displayName: (r.display_name as string) || "—",
       role: (r.role as string) ?? "user",
       createdAt: r.created_at as string,
     }));
+
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const newThisWeek = rows.filter((r) => new Date(r.created_at as string).getTime() >= weekAgo).length;
 
     // Signups per day for the last 14 days.
     const today = new Date();
@@ -60,6 +63,7 @@ adminRouter.get(
       userCount: rows.length,
       adminCount,
       newToday: signupsByDay[signupsByDay.length - 1]?.count ?? 0,
+      newThisWeek,
       recentUsers,
       signupsByDay,
     });

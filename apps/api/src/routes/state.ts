@@ -41,9 +41,14 @@ stateRouter.get(
       db.from("profiles").select("*").maybeSingle(),
     ]);
 
-    for (const r of [daily, monthly, tx, habits]) {
+    // Core data must load; surface real failures instead of returning partial state.
+    for (const r of [daily, monthly, tx, habits, habitLogs]) {
       if (r.error) throw r.error;
     }
+    // prefs/profile are optional (a missing row is fine via maybeSingle); only a
+    // genuine query error is logged, then defaulted below.
+    if (prefs.error) console.warn("[roznama-api] preferences load error:", prefs.error.message);
+    if (profile.error) console.warn("[roznama-api] profile load error:", profile.error.message);
 
     // Build per-habit done-day sets for streaks + today's status.
     const logsByHabit = new Map<string, Set<string>>();

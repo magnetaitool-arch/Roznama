@@ -74,11 +74,15 @@ export function Settings({ store, onRequestNotif, onGo }: { store: RoznamaStore;
       if (store.mode === "cloud") {
         // Accept either a server BackupBundle or a local snapshot.
         const bundle: BackupBundle = data.version === 1 ? data : { version: 1, exportedAt: new Date().toISOString(), daily: data.daily ?? [], monthly: data.monthly ?? [], tx: data.tx ?? [], habits: (data.habits ?? []).map((h: Record<string, unknown>) => ({ ...h })) };
-        await fetch(`/api/backup/restore?replace=true`, {
+        const res = await fetch(`/api/backup/restore?replace=true`, {
           method: "POST",
           headers: { "Content-Type": "application/json", ...(await authHeader()) },
           body: JSON.stringify(bundle),
         });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error ?? `فشل الاسترجاع (${res.status})`);
+        }
         store.refresh();
         setNote("تم استرجاع البيانات ✓");
       } else {

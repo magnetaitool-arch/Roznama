@@ -43,12 +43,13 @@ backupRouter.post(
     const uid = req.userId;
 
     if (req.query.replace === "true") {
-      await Promise.all([
+      const dels = await Promise.all([
         req.db.from("daily_tasks").delete().eq("user_id", uid),
         req.db.from("monthly_goals").delete().eq("user_id", uid),
         req.db.from("transactions").delete().eq("user_id", uid),
         req.db.from("habits").delete().eq("user_id", uid),
       ]);
+      for (const d of dels) if (d.error) throw d.error;
     }
 
     const inserts: PromiseLike<unknown>[] = [];
@@ -104,7 +105,10 @@ backupRouter.post(
         ),
       );
     }
-    await Promise.all(inserts);
+    const results = await Promise.all(inserts);
+    for (const r of results as Array<{ error?: { message?: string } } | null>) {
+      if (r?.error) throw r.error;
+    }
     res.json({ ok: true });
   }),
 );

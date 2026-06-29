@@ -6,7 +6,7 @@ export function RoznamaLogo({ size = 44 }: { size?: number }) {
       alt="روزنامة"
       width={size}
       height={size}
-      style={{ width: size, height: size, objectFit: "contain", display: "block", flex: "none" }}
+      style={{ width: size, height: size, objectFit: "contain", display: "inline-block", verticalAlign: "middle", flex: "none" }}
     />
   );
 }

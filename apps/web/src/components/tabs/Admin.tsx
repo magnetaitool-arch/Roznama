@@ -38,10 +38,11 @@ export function Admin({ store }: { store: RoznamaStore }) {
       <div style={{ ...card, marginTop: 8 }}>
         <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: ".14em", color: "var(--red)" }}>لوحة الأدمن</div>
         <div style={{ fontSize: 14, fontWeight: 700, color: "var(--muted)", marginTop: 3 }}>متابعة المستخدمين والتسجيلات</div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginTop: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 14 }}>
           {[
             { label: "كل المستخدمين", val: data ? toAr(data.userCount) : "…" },
             { label: "النهارده", val: data ? toAr(data.newToday) : "…" },
+            { label: "آخر ٧ أيام", val: data ? toAr(data.newThisWeek) : "…" },
             { label: "أدمن", val: data ? toAr(data.adminCount) : "…" },
           ].map((k) => (
             <div key={k.label} style={{ background: "var(--paper-sunken)", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>

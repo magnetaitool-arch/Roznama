@@ -17,6 +17,7 @@ export function Habits({ store }: { store: RoznamaStore }) {
     store.addHabit(name, emoji, color);
     setName("");
     setEmoji("✅");
+    setColor(COLORS[0]);
   };
 
   return (

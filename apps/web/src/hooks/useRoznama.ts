@@ -40,6 +40,8 @@ export interface RoznamaStore {
   notifOn: boolean;
   displayName: string;
   role: UserRole;
+  /** Set when a cloud load fails, so the UI can show a retry banner. */
+  error: string | null;
 
   addDaily: (text: string) => void;
   toggleDaily: (id: string) => void;
@@ -104,6 +106,7 @@ export function useRoznama(authed: boolean): RoznamaStore {
   const [notifOn, setNotifOn] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [role, setRole] = useState<UserRole>("user");
+  const [error, setError] = useState<string | null>(null);
 
   const habits = mode === "cloud" ? cloudHabits : localHabits.map(statusFromLocal);
 
@@ -131,6 +134,7 @@ export function useRoznama(authed: boolean): RoznamaStore {
   const refresh = useCallback(async () => {
     if (mode !== "cloud") return;
     setLoading(true);
+    setError(null);
     try {
       const s = await api.getState();
       setDaily(s.daily);
@@ -142,6 +146,7 @@ export function useRoznama(authed: boolean): RoznamaStore {
       setRole(s.profile?.role ?? "user");
     } catch (e) {
       console.error("[roznama] failed to load cloud state", e);
+      setError((e as Error).message || "تعذّر تحميل بياناتك");
     } finally {
       setLoading(false);
     }
@@ -305,6 +310,7 @@ export function useRoznama(authed: boolean): RoznamaStore {
     notifOn,
     displayName,
     role,
+    error,
     addDaily,
     toggleDaily,
     deleteDaily,

@@ -35,8 +35,15 @@ async function req<T>(path: string, init: RequestInit = {}): Promise<T> {
     },
   });
   if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.error ?? `Request failed (${res.status})`);
+    const raw = await res.text().catch(() => "");
+    let msg = `Request failed (${res.status})`;
+    try {
+      const body = JSON.parse(raw);
+      if (body?.error) msg = body.error;
+    } catch {
+      if (raw) msg = raw.slice(0, 140);
+    }
+    throw new Error(msg);
   }
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
@@ -99,6 +106,7 @@ export interface AdminOverview {
   userCount: number;
   adminCount: number;
   newToday: number;
+  newThisWeek: number;
   recentUsers: { displayName: string; role: string; createdAt: string }[];
   signupsByDay: { day: string; count: number }[];
 }

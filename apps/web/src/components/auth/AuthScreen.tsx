@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { RoznamaLogo } from "../RoznamaLogo";
 
 export function AuthScreen({ onGuest }: { onGuest: () => void }) {
-  const { signIn, signUp, signInWithGoogle } = useAuth();
+  const { signIn, signUp } = useAuth();
   const [mode, setMode] = useState<"in" | "up">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,19 +53,6 @@ export function AuthScreen({ onGuest }: { onGuest: () => void }) {
         </div>
 
         <div style={{ background: "var(--paper)", border: "1px solid var(--border)", borderRadius: 22, padding: 20, boxShadow: "var(--shadow-hero)" }}>
-          <motion.button
-            whileTap={{ scale: 0.98 }}
-            onClick={() => { setErr(null); signInWithGoogle().catch((e) => setErr((e as Error).message)); }}
-            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: "#fff", border: "1px solid #E0D3B2", borderRadius: 13, padding: "13px 0", fontSize: 15, fontWeight: 800, color: "#2A241C", marginBottom: 14 }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38z"/></svg>
-            المتابعة بحساب Google
-          </motion.button>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-            <span style={{ flex: 1, height: 1, background: "var(--border)" }} />
-            <span style={{ fontSize: 11, fontWeight: 700, color: "var(--muted-2)" }}>أو</span>
-            <span style={{ flex: 1, height: 1, background: "var(--border)" }} />
-          </div>
           <div style={{ display: "flex", background: "var(--paper-sunken)", borderRadius: 12, padding: 4, gap: 4, marginBottom: 6 }}>
             <button onClick={() => setMode("in")} style={{ flex: 1, borderRadius: 9, padding: "9px 0", fontSize: 13, fontWeight: 800, background: mode === "in" ? "var(--paper-input)" : "transparent", color: mode === "in" ? "var(--red)" : "var(--muted-2)" }}>تسجيل دخول</button>
             <button onClick={() => setMode("up")} style={{ flex: 1, borderRadius: 9, padding: "9px 0", fontSize: 13, fontWeight: 800, background: mode === "up" ? "var(--paper-input)" : "transparent", color: mode === "up" ? "var(--red)" : "var(--muted-2)" }}>حساب جديد</button>

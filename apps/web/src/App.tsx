@@ -102,6 +102,13 @@ function MainApp() {
     >
       <Header tab={tab} bellOn={store.notifOn} onToggleBell={toggleBell} onGo={setTab} />
 
+      {store.error && (
+        <div style={{ margin: "0 18px 6px", background: "var(--red-soft-bg)", border: "1px solid var(--red-soft-border)", borderRadius: 14, padding: "12px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ flex: 1, fontSize: 13, fontWeight: 700, color: "var(--red)" }}>تعذّر تحميل بياناتك. تأكد من اتصالك وحاول تاني.</span>
+          <button onClick={() => store.refresh()} style={{ flex: "none", background: "var(--red)", color: "#fff", borderRadius: 10, padding: "8px 14px", fontSize: 13, fontWeight: 800 }}>إعادة المحاولة</button>
+        </div>
+      )}
+
       <main style={{ padding: "0 0 116px" }}>
         <AnimatePresence mode="wait">
           <div key={tab}>

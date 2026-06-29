@@ -18,5 +18,13 @@ const anonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) |
 export const cloudEnabled = Boolean(url && anonKey);
 
 export const supabase: SupabaseClient | null = cloudEnabled
-  ? createClient(url, anonKey, { auth: { persistSession: true, autoRefreshToken: true } })
+  ? createClient(url, anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        // Exchange the OAuth `?code=` / token hash for a session on load.
+        detectSessionInUrl: true,
+        flowType: "pkce",
+      },
+    })
   : null;
