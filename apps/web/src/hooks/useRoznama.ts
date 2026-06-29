@@ -152,6 +152,10 @@ export function useRoznama(authed: boolean): RoznamaStore {
     }
   }, [mode]);
 
+  // Surface a failed cloud mutation so it isn't silent.
+  const onCloudError = (e: unknown) =>
+    setError((e as Error)?.message || "تعذّر حفظ التغيير. تأكد من اتصالك وحاول تاني.");
+
   // Initial hydration.
   const booted = useRef(false);
   useEffect(() => {
@@ -179,7 +183,9 @@ export function useRoznama(authed: boolean): RoznamaStore {
     if (mode === "cloud") {
       const tmp: DailyTask = { id: uid(), text: t, done: false, day: todayKey(), sort: Date.now(), createdAt: "" };
       setDaily((d) => [...d, tmp]);
-      api.addDaily(t).then((real) => setDaily((d) => d.map((x) => (x.id === tmp.id ? real : x)))).catch(console.error);
+      api.addDaily(t)
+        .then((real) => setDaily((d) => d.map((x) => (x.id === tmp.id ? real : x))))
+        .catch((e) => { setDaily((d) => d.filter((x) => x.id !== tmp.id)); onCloudError(e); });
     } else {
       const next = [...daily, { id: uid(), text: t, done: false, day: todayKey(), sort: daily.length, createdAt: new Date().toISOString() }];
       setDaily(next);
@@ -191,13 +197,13 @@ export function useRoznama(authed: boolean): RoznamaStore {
     setDaily(next);
     if (mode === "cloud") {
       const target = next.find((t) => t.id === id);
-      if (target) api.updateDaily(id, { done: target.done }).catch(console.error);
+      if (target) api.updateDaily(id, { done: target.done }).catch((e) => { onCloudError(e); refresh(); });
     } else saveLocal({ daily: next });
   };
   const deleteDaily = (id: string) => {
     const next = daily.filter((t) => t.id !== id);
     setDaily(next);
-    if (mode === "cloud") api.deleteDaily(id).catch(console.error);
+    if (mode === "cloud") api.deleteDaily(id).catch((e) => { onCloudError(e); refresh(); });
     else saveLocal({ daily: next });
   };
 
@@ -207,7 +213,11 @@ export function useRoznama(authed: boolean): RoznamaStore {
     if (!t) return;
     const tg = target.trim() || "الشهر ده";
     if (mode === "cloud") {
-      api.addMonthly({ text: t, target: tg }).then((g) => setMonthly((m) => [...m, g])).catch(console.error);
+      const tmp: MonthlyGoal = { id: uid(), text: t, target: tg, progress: 0, sort: Date.now(), createdAt: "" };
+      setMonthly((m) => [...m, tmp]);
+      api.addMonthly({ text: t, target: tg })
+        .then((g) => setMonthly((m) => m.map((x) => (x.id === tmp.id ? g : x))))
+        .catch((e) => { setMonthly((m) => m.filter((x) => x.id !== tmp.id)); onCloudError(e); });
     } else {
       const next = [...monthly, { id: uid(), text: t, target: tg, progress: 0, sort: monthly.length, createdAt: new Date().toISOString() }];
       setMonthly(next);
@@ -221,13 +231,13 @@ export function useRoznama(authed: boolean): RoznamaStore {
     setMonthly(next);
     if (mode === "cloud") {
       const target = next.find((g) => g.id === id);
-      if (target) api.updateMonthly(id, { progress: target.progress }).catch(console.error);
+      if (target) api.updateMonthly(id, { progress: target.progress }).catch((e) => { onCloudError(e); refresh(); });
     } else saveLocal({ monthly: next });
   };
   const deleteMonthly = (id: string) => {
     const next = monthly.filter((g) => g.id !== id);
     setMonthly(next);
-    if (mode === "cloud") api.deleteMonthly(id).catch(console.error);
+    if (mode === "cloud") api.deleteMonthly(id).catch((e) => { onCloudError(e); refresh(); });
     else saveLocal({ monthly: next });
   };
 
@@ -236,7 +246,11 @@ export function useRoznama(authed: boolean): RoznamaStore {
     if (!amount || amount <= 0) return;
     const c = cat.trim() || (type === "in" ? "دخل" : "مصروف");
     if (mode === "cloud") {
-      api.addTx({ type, amount, cat: c }).then((t) => setTx((all) => [t, ...all])).catch(console.error);
+      const tmp: Transaction = { id: uid(), type, amount, cat: c, date: new Date().toISOString(), createdAt: "" };
+      setTx((all) => [tmp, ...all]);
+      api.addTx({ type, amount, cat: c })
+        .then((real) => setTx((all) => all.map((x) => (x.id === tmp.id ? real : x))))
+        .catch((e) => { setTx((all) => all.filter((x) => x.id !== tmp.id)); onCloudError(e); });
     } else {
       const t: Transaction = { id: uid(), type, amount, cat: c, date: new Date().toISOString(), createdAt: new Date().toISOString() };
       const next = [t, ...tx];
@@ -247,7 +261,7 @@ export function useRoznama(authed: boolean): RoznamaStore {
   const deleteTx = (id: string) => {
     const next = tx.filter((t) => t.id !== id);
     setTx(next);
-    if (mode === "cloud") api.deleteTx(id).catch(console.error);
+    if (mode === "cloud") api.deleteTx(id).catch((e) => { onCloudError(e); refresh(); });
     else saveLocal({ tx: next });
   };
 
@@ -256,9 +270,11 @@ export function useRoznama(authed: boolean): RoznamaStore {
     const n = name.trim();
     if (!n) return;
     if (mode === "cloud") {
+      const tmp: HabitWithStatus = { id: uid(), name: n, emoji, color, sort: Date.now(), createdAt: "", doneToday: false, streak: 0 };
+      setCloudHabits((all) => [...all, tmp]);
       api.addHabit({ name: n, emoji, color })
-        .then((h) => setCloudHabits((all) => [...all, { ...h, doneToday: false, streak: 0 }]))
-        .catch(console.error);
+        .then((h) => setCloudHabits((all) => all.map((x) => (x.id === tmp.id ? { ...h, doneToday: false, streak: 0 } : x))))
+        .catch((e) => { setCloudHabits((all) => all.filter((x) => x.id !== tmp.id)); onCloudError(e); });
     } else {
       const next = [...localHabits, { id: uid(), name: n, emoji, color, sort: localHabits.length, createdAt: new Date().toISOString(), log: {} }];
       setLocalHabits(next);
@@ -269,7 +285,7 @@ export function useRoznama(authed: boolean): RoznamaStore {
     if (mode === "cloud") {
       // optimistic flip, then reconcile streak from server
       setCloudHabits((all) => all.map((h) => (h.id === id ? { ...h, doneToday: !h.doneToday } : h)));
-      api.toggleHabit(id).then(() => refresh()).catch(console.error);
+      api.toggleHabit(id).then(() => refresh()).catch((e) => { onCloudError(e); refresh(); });
     } else {
       const t = todayKey();
       const next = localHabits.map((h) => {
@@ -286,7 +302,7 @@ export function useRoznama(authed: boolean): RoznamaStore {
   const deleteHabit = (id: string) => {
     if (mode === "cloud") {
       setCloudHabits((all) => all.filter((h) => h.id !== id));
-      api.deleteHabit(id).catch(console.error);
+      api.deleteHabit(id).catch((e) => { onCloudError(e); refresh(); });
     } else {
       const next = localHabits.filter((h) => h.id !== id);
       setLocalHabits(next);

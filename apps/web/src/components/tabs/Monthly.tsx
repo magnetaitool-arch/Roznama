@@ -2,12 +2,27 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { RoznamaStore } from "../../hooks/useRoznama";
 import { deriveTotals } from "../../lib/derive";
-import { fmt, toAr } from "../../lib/format";
+import { fmt, fmtNum, toAr } from "../../lib/format";
 
 export function Monthly({ store }: { store: RoznamaStore }) {
   const [text, setText] = useState("");
   const [target, setTarget] = useState("");
   const avg = Math.round(deriveTotals(store.daily, store.monthly, store.tx).monthlyPct);
+  const now = new Date();
+
+  // Quick date presets — fill the (still-editable) target field with an Arabic date.
+  const fmtDate = (d: Date) => fmtNum(d, { day: "numeric", month: "long" });
+  const presets: { label: string; make: () => Date }[] = [
+    { label: "آخر الشهر", make: () => new Date(now.getFullYear(), now.getMonth() + 1, 0) },
+    { label: "نص الشهر", make: () => new Date(now.getFullYear(), now.getMonth(), 15) },
+    { label: "خلال أسبوع", make: () => new Date(Date.now() + 7 * 86400000) },
+    { label: "آخر السنة", make: () => new Date(now.getFullYear(), 11, 31) },
+  ];
+  const pickDate = (iso: string) => {
+    if (!iso) return;
+    const [y, m, d] = iso.split("-").map(Number);
+    setTarget(fmtDate(new Date(y, m - 1, d)));
+  };
 
   const add = () => {
     store.addMonthly(text, target);
@@ -41,6 +56,24 @@ export function Monthly({ store }: { store: RoznamaStore }) {
         <motion.button whileTap={{ scale: 0.92 }} onClick={add} style={{ width: 50, flex: "none", borderRadius: 13, background: "var(--red)", color: "#FBF5E6", fontSize: 26, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 6px 14px rgba(194,59,46,.3)" }}>
           +
         </motion.button>
+      </div>
+
+      {/* Quick date selection — presets + calendar; manual typing above still works */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, margin: "8px 18px 0", alignItems: "center" }}>
+        {presets.map((p) => (
+          <button
+            key={p.label}
+            onClick={() => setTarget(fmtDate(p.make()))}
+            style={{ background: "var(--paper-sunken)", border: "1px solid var(--border-input)", borderRadius: 999, padding: "6px 12px", fontSize: 12, fontWeight: 700, color: "var(--muted)" }}
+          >
+            {p.label}
+          </button>
+        ))}
+        <label style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "var(--paper-sunken)", border: "1px solid var(--border-input)", borderRadius: 999, padding: "6px 12px", fontSize: 12, fontWeight: 700, color: "var(--red)", cursor: "pointer" }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18" /><path d="M8 2v4" /><path d="M16 2v4" /></svg>
+          تقويم
+          <input type="date" onChange={(e) => pickDate(e.target.value)} style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "auto" }} />
+        </label>
       </div>
 
       <AnimatePresence initial={false}>
