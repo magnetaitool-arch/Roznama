@@ -21,5 +21,30 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Self-heal: if the app hasn't mounted a few seconds after load (e.g. a
+      // stale service worker served an old shell), clear caches/SWs and reload
+      // once so the user never gets stuck on a blank screen.
+      (function () {
+        function heal() {
+          try {
+            var root = document.getElementById("root");
+            if (root && root.children.length === 0 && !sessionStorage.getItem("rz_healed")) {
+              sessionStorage.setItem("rz_healed", "1");
+              if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function (rs) {
+                  rs.forEach(function (r) { r.unregister(); });
+                });
+              }
+              if (window.caches && caches.keys) {
+                caches.keys().then(function (ks) { ks.forEach(function (k) { caches.delete(k); }); });
+              }
+              setTimeout(function () { location.reload(); }, 400);
+            }
+          } catch (e) {}
+        }
+        window.addEventListener("load", function () { setTimeout(heal, 4000); });
+      })();
+    </script>
   </body>
 </html>
