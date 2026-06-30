@@ -19,3 +19,14 @@ export function anonClient(): SupabaseClient {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
+
+/**
+ * Service-role client (bypasses RLS). Used only by the reminders cron, which is
+ * not a logged-in user and must read across all users' subscriptions/tasks.
+ */
+export function serviceClient(): SupabaseClient {
+  if (!env.supabaseServiceKey) throw new Error("SUPABASE_SERVICE_ROLE_KEY not set");
+  return createClient(env.supabaseUrl, env.supabaseServiceKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}

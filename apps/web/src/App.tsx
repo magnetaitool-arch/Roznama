@@ -12,6 +12,7 @@ import { Habits } from "./components/tabs/Habits";
 import { Monthly } from "./components/tabs/Monthly";
 import { Finance } from "./components/tabs/Finance";
 import { toAr } from "./lib/format";
+import { subscribeToPush, unsubscribeFromPush } from "./lib/push";
 import type { Tab } from "./lib/tabs";
 
 // Heavy tabs (Recharts, backup tooling) are split into their own chunks.
@@ -73,11 +74,21 @@ function MainApp() {
       if (p === "granted") {
         store.setNotif(true);
         notify("روزنامة 🔔", "هنفكّرك بمهامك اللي ناقصة.");
+        // Register Web Push so reminders arrive even when the app is closed
+        // (signed-in users; no-ops/ignored for guests).
+        void subscribeToPush();
       }
     });
   }, [store, notify]);
 
-  const toggleBell = () => (store.notifOn ? store.setNotif(false) : requestNotif());
+  const toggleBell = () => {
+    if (store.notifOn) {
+      store.setNotif(false);
+      void unsubscribeFromPush();
+    } else {
+      requestNotif();
+    }
+  };
 
   if (store.loading) {
     return (

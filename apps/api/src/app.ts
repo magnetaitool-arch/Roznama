@@ -11,6 +11,8 @@ import { profileRouter } from "./routes/profile.js";
 import { reportsRouter } from "./routes/reports.js";
 import { backupRouter } from "./routes/backup.js";
 import { adminRouter } from "./routes/admin.js";
+import { pushRouter } from "./routes/push.js";
+import { cronRouter } from "./routes/cron.js";
 
 export function createApp() {
   const app = express();
@@ -19,6 +21,9 @@ export function createApp() {
 
   app.get("/health", (_req, res) => res.json({ ok: true, configured: env.isConfigured() }));
   app.get("/api/health", (_req, res) => res.json({ ok: true, configured: env.isConfigured() }));
+
+  // Cron is machine-to-machine (Vercel Cron) — guarded by CRON_SECRET, not user auth.
+  app.use("/api/cron", cronRouter);
 
   // Everything below requires a valid Supabase access token.
   const api = express.Router();
@@ -32,6 +37,7 @@ export function createApp() {
   api.use("/reports", reportsRouter);
   api.use("/backup", backupRouter);
   api.use("/admin", adminRouter);
+  api.use("/push", pushRouter);
   app.use("/api", api);
 
   // Central error handler — keeps Supabase/Postgres error shapes consistent.

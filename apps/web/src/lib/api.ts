@@ -100,6 +100,11 @@ export const api = {
   getBackup: () => req<unknown>("/backup"),
 
   getAdminOverview: () => req<AdminOverview>("/admin/overview"),
+
+  subscribePush: (subscription: unknown) =>
+    req<{ ok: boolean }>("/push/subscribe", { method: "POST", body: JSON.stringify({ subscription }) }),
+  unsubscribePush: (endpoint: string) =>
+    req<{ ok: boolean }>("/push/unsubscribe", { method: "POST", body: JSON.stringify({ endpoint }) }),
 };
 
 export interface AdminOverview {
