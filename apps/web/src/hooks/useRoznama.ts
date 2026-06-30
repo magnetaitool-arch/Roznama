@@ -3,6 +3,7 @@ import type {
   DailyTask,
   HabitWithStatus,
   MonthlyGoal,
+  RoznamaState,
   Transaction,
   UserRole,
 } from "@roznama/shared";
@@ -19,6 +20,7 @@ import {
 } from "../lib/seed";
 
 const LS_KEY = "roznama_v2";
+const CLOUD_CACHE = "roznama_cloud_cache";
 
 type Mode = "cloud" | "local";
 
@@ -144,9 +146,33 @@ export function useRoznama(authed: boolean): RoznamaStore {
       setNotifOn(s.notifOn);
       setDisplayName(s.profile?.displayName ?? "");
       setRole(s.profile?.role ?? "user");
+      try {
+        localStorage.setItem(CLOUD_CACHE, JSON.stringify(s));
+      } catch {
+        /* quota */
+      }
     } catch (e) {
       console.error("[roznama] failed to load cloud state", e);
-      setError((e as Error).message || "تعذّر تحميل بياناتك");
+      // Offline / failed: fall back to the last cached cloud state so the user
+      // still sees their data instead of an empty screen.
+      let cached: RoznamaState | null = null;
+      try {
+        cached = JSON.parse(localStorage.getItem(CLOUD_CACHE) || "null");
+      } catch {
+        cached = null;
+      }
+      if (cached?.daily) {
+        setDaily(cached.daily);
+        setMonthly(cached.monthly);
+        setTx(cached.tx);
+        setCloudHabits(cached.habits);
+        setNotifOn(cached.notifOn);
+        setDisplayName(cached.profile?.displayName ?? "");
+        setRole(cached.profile?.role ?? "user");
+        setError(null);
+      } else {
+        setError((e as Error).message || "تعذّر تحميل بياناتك");
+      }
     } finally {
       setLoading(false);
     }
