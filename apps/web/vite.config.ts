@@ -8,6 +8,10 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      // TEMPORARY: ship a self-destroying service worker that unregisters any
+      // stuck SW and clears its caches on every client, fixing the blank-screen
+      // issue. Re-enable real offline caching once everyone is unstuck.
+      selfDestroying: true,
       registerType: "autoUpdate",
       injectRegister: "auto",
       includeAssets: ["roznama-logo.png"],
